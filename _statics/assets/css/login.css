@@ -1,0 +1,15 @@
+/* login with style 
+-------------------------------------------------- */
+.container.login{
+    padding-top:10%;
+}
+.login #logo{
+    float:left;
+}
+.login h1{
+    color:#c0c0c0;
+    font-size:60px;
+}
+.login .well{
+    margin-top:10px;
+}

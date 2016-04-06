@@ -1,0 +1,41 @@
+{% load i18n %}{% load url from future %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>RUMA :: {% trans 'login' as login_label %}{{login_label|title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Le styles -->
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/login.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{{ STATIC_URL }}ico/favicon.ico">
+  </head>
+  <body>
+    <div class="container login">
+      <div class="row">
+        <div class="span6 offset3">
+          <div class="clearfix">
+            <img src="{{ STATIC_URL }}img/ruma.png" id="logo">
+            <h1>Mapan <span style="color:#FFA51E">Web</span> <span style="color:#4DA632">Manage</span>ment</h1>
+          </div>
+          <form action="{% url 'homepage_index' %}" method="post" id="login-form" class="well form-inline">{% csrf_token %}
+            <input type="text" class="input-small" placeholder="{% trans 'Username' %}" name="username" id="id_username" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+            <input type="password" class="input-small" placeholder="{% trans 'Password' %}" name="password" id="id_password">
+            <!-- <label class="checkbox">
+                          <input type="checkbox" name="remember" id="id_remember"> Remember me
+                        </label> -->
+            <button type="submit" class="btn btn-primary">{% trans 'Sign in' %}</button>
+            <input type="hidden" name="next" value="{{ next }}" />
+          </form>
+          {% if form.errors %}
+          <div class="alert alert-danger">
+            {% blocktrans with open_tag="<strong>" end_tag="</strong>" %}{{open_tag}}Oh crap!{{end_tag}} try again try again!!!{% endblocktrans %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+  </body>
+</html>

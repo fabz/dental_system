@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}{% load panel_helpers %}{% load i18n %}
+{% block title %}{{ model_name }} {% crud_label %}{% endblock %}
+{% block content %}
+{{ request.id }}
+<div class="row form-view">
+  <div class="span9">
+    <div class="page-header">
+      <h1>{{ model_name }} <small>{% crud_label %}</small></h1>
+    </div>
+    {% include 'panel/messages.html' %}
+    <div class="alert alert-block">
+      <h4 class="alert-heading">{% trans 'warning' as warning_label %}{{warning_label|title}}!</h4>
+      {% blocktrans with object_id=object.id object_detail=object %}You're going to remove object id: {{ object_id }}, {{ object_detail }}?{% endblocktrans %}
+    </div>
+    <form name="form_mod" id="form_mod" action="." method="post" class="form-horizontal">{% csrf_token %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-danger">{% trans 'Delete' %}</button>
+        <a href="../../" class="btn">{% trans 'Close' %}</a>
+      </div>
+    </form>
+  </div><!-- end span9 -->
+  
+  <div class="span3">
+
+  </div><!-- end span3 -->
+  
+</div><!-- end row -->
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
+{% block additional_right_button %}
+    <a href="{% url 'dentists_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Dentist' as dentists_new %}{{dentists_new|title}}</a>
+{% endblock %}
+{% block table_headers %}
+    <tr>
+        <th><a href="?{% sort_field_query 'id' %}">ID</a></th>
+        <th width="155px"><a href="?{% sort_field_query 'created_time' %}">Created Time</a></th>
+        <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
+        <th><a href="?{% sort_field_query 'specialization' %}">Specialization</a></th>
+        <th><a href="?{% sort_field_query 'is_active' %}">Active?</a></th>
+        <th><a href="?{% sort_field_query 'is_deleted' %}">Deleted?</a></th>
+        {% if rank_enabled == 1 %}
+            <th>Rank</th>
+        {% endif %}
+    </tr>    
+{% endblock %}
+{% block table_rows %}
+    <td>{{ obj.id }}</td>
+    <td>
+        <div class="row-tools">
+            <a href="#" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
+    </td>
+    <td>{{ obj.name }}</td>
+    <td>{{ obj.specialization|get_specialization_view|safe }}</td>
+    <td>{{ obj.is_active|get_status_view|safe }}</td>
+    <td>{{ obj.is_deleted|get_status_view|safe }}</td>
+{% endblock %}

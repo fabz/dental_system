@@ -1,0 +1,10 @@
+{% load homepage_helpers %}{% load i18n %}
+{% if messages %}
+  {% for message in messages %}
+<div class="alert {% fancy_message_class message.tags %}">
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <h4 class="alert-heading">{% trans message.tags as message_tag %}{{ message_tag|title }}!</h4>
+  {{ message|safe }}
+</div>
+  {% endfor %}
+{% endif %}

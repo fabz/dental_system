@@ -1,0 +1,33 @@
+{% load i18n %}
+{% include 'homepage/messages.html' %}
+<form name="form_mod" id="form_mod" action="." method="post" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+  <fieldset>
+  {% for f in form %}
+    <div class="form-group{% if f.errors %} has-error{% endif %}">
+		<label for="id_{{ f.name }}" class="col-sm-2 control-label">{{ f.label|title }}</label>
+		<div class="col-sm-10">
+			{{ f }}
+			{% if f.errors %}
+				<span class="has-error">{{ f.errors.0 }}</span>
+			{% endif%}
+			{% if f.help_text %}
+				<p class="help-block">{{ f.help_text|safe }}</p>
+			{% endif %}
+		</div>
+	</div>
+    <hr/>
+  {% endfor %}
+
+  </fieldset>
+  <div class="form-actions">
+  	{% if button_label %}
+  	<button type="submit" class="btn btn-primary">{{ button_label }}</button>
+  	{% else %}
+  	<button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+  	{% endif %}
+    
+    {% if form_back_url %}
+    <a href="{% url form_back_url %}" class="btn">{% trans 'Close' %}</a>
+    {% endif %}
+  </div>
+</form>

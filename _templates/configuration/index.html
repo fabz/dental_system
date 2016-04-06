@@ -1,0 +1,18 @@
+{% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
+{% block additional_right_button %}
+{% endblock %}
+{% block table_headers %}
+	<tr>
+		<th><a href="?{% sort_field_query 'id' %}">ID</a></th>
+		<th><a href="?{% sort_field_query 'key' %}">Key</a></th>
+		<th>Value</a></th>
+	</tr>
+	
+{% endblock %}    
+{% block table_rows %}
+	<td>{{ obj.id }}</td>
+	<td>{{ obj.key }}</td>
+	<td>{{ obj.value }}</td>
+{% endblock %}
+
+{% include 'layouts/pagination.html' %}

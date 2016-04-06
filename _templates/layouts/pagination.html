@@ -1,0 +1,28 @@
+{% load homepage_helpers %}
+{% if is_paginated %}
+<div class="text-center">
+  <ul class="pagination pagination-sm">
+    {% if page_obj.number > 1 %}
+  	<li><a href="?{% override_query 'page' 1 %}">&lt;&lt;</a></li>
+  	{% else %}
+  	<li class="active"><a href="javascript:;">&lt;&lt;</a></li>
+  	{% endif %}
+  	{% if page_obj.has_previous %}
+    <li><a href="?{% override_query 'page' page_obj.previous_page_number %}">&lt;</a></li>
+    {% else %}
+    <li class="active"><a href="javascript:;">&lt;</a></li>
+    {% endif %}
+    <li class="disabled"><a href="javascript:;">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+    {% if page_obj.has_next %}
+    <li><a href="?{% override_query 'page' page_obj.next_page_number %}">&gt;</a></li>
+    {% else %}
+    <li class="active"><a href="javascript:;">&gt;</a></li>
+    {% endif %}
+    {% if page_obj.number < page_obj.paginator.num_pages %}
+    <li><a href="?{% override_query 'page' page_obj.paginator.num_pages %}">&gt;&gt;</a></li>
+    {% else %}
+    <li class="active"><a href="javascript:;">&gt;&gt;</a></li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}

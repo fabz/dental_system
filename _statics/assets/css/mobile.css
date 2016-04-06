@@ -1,0 +1,76 @@
+/* login with style 
+-------------------------------------------------- */
+body{font-family:'Lucida Grande',sans-serif;font-size:14px;
+ }
+
+div.column {
+	width: 75px;
+	white-space: pre;
+}
+
+.fl-left {
+	float: left;
+}
+
+table
+{
+border-collapse:collapse;
+}
+table, td, th
+{
+border:1px solid black;
+}
+
+/*  ul,li{
+ list-style-image:none;
+ list-style-position:outside;
+ list-style-type:none;
+ } */
+  
+/*  fieldset{border:0;}
+ #container {
+ background:#FFF none repeat scroll 0 0;
+ color:#333;margin:1em auto;
+ position:relative;text-align:left;width:763px;
+ z-index:1;
+ } */
+/*  .content-heading {margin:20px 25px 25px;}
+ .content-heading .heading {line-height:1;padding-bottom:5px;}
+ .heading h2{
+ font-family:Helvetica,Arial,sans-serif;font-size:26px;
+ font-weight:bold;letter-spacing:-1px;
+ text-transform:capitalize;margin:0 !important;
+ } */
+/*  .frmWrapper{padding:5px 10px 15px;} */
+/*  .info-signup {color:#666;line-height:18px;margin:5px 0;} */
+/*  .infoMhs{
+ color:#666;float:right;
+ font-size:10px;line-height:18px;
+ } */
+/*  #frmReg li{margin-bottom:10px;} */
+/*  #frmReg label{
+ color:#666;display:block;float:left;font-size:14px;
+ line-height:18px;margin:6px 0 0 0;
+ text-align:left;width:120px;
+ } */
+/*  #frmReg input, #frmReg input:focus{
+ font-size:14px;outline:0;border:1px solid #CCC;padding:5px;
+ } */
+/*  .inputWrapper{
+ color:#666;font-size:12px;padding:5px;
+ } */
+/*  .btnSubmit{cursor:pointer;} */
+/*  #frmReg label.emailUpdates{
+ font-size:12px;
+ margin:2px;width:auto;
+ } */
+/*  .left{float:left;} */
+/*  .clearfix{clear:both;} */
+
+/*  .clean-gray{
+ border:solid 1px #DEDEDE; 
+ background:red;
+ color:#fff;
+ padding:4px;
+ text-align:center;
+ } */

@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %}
+{% load url from future %}
+{% load i18n %}
+{% block title %}Dashboard{% endblock %}
+{% block js %}
+<script type="text/javascript">
+/*var cur_height = ($("#image").height() - $(".navbar").height()) + "px";
+var top_height = "+=" + $(".navbar").height() + "px";
+var cur_width = (($("#image").height() - $(".navbar").height()) * 1.084)+ "px";
+$(".camera-holder").css("top", top_height);
+$("#image").css("height", cur_height);
+$("#image").css("width", cur_width);*/
+
+/* if you want to put image, uncomment below
+var height = $(window).height() - ($(".navbar").height()*2) - $(".page-header").height();
+$(".carousel-image").css("height", ""+height+"px");
+$(".carousel").carousel({
+  interval: 10000
+});*/
+</script>
+{% endblock %}
+{% block css %}
+<style type="text/css">
+<style>
+    html, body {background:none; height:100%; }
+    .camera-holder {position:fixed; top:0px; left:0; width:100%; height:100%; z-index:-1;}
+    .container-fluid { padding: 0px; }
+    .carousel-image{margin: auto}
+</style>
+{% endblock %}
+{% block content %}
+<!-- div class="container-fluid">
+   	<div class="row-fluid">
+    	<div class="camera-holder" style="text-align: center">
+            <img id="image" alt="camera" src="{{ STATIC_URL }}images/POSTER2.jpg" style="width:100%;height:100%">
+    	</div>
+    </div>
+</div -->
+<div id="myCarousel" class="carousel slide" data-interval="1000">
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+  </ol>
+  <!-- Carousel items -->
+  <!-- <div class="carousel-inner" style="background-color: #eee !important; padding: 1px">
+     <div class="active item"><div style="text-align: center"><img class="carousel-image" src="{{ STATIC_URL }}images/MAPAN.png" alt="" style='max-width:1140px'/></div></div> 
+  </div> -->
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>
+{% endblock %}

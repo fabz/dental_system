@@ -1,0 +1,295 @@
+{% extends "layouts/base.html" %}{% load i18n %}
+{% block title %}{{page_title}} {% endblock %}
+{% block css %}
+	{% block additional_css %}
+{% endblock %}
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	function htmlEscape(str) {
+		return String(str)
+			.replace(/&/g, '&amp;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
+	}
+	
+	function isString(o) {
+		return typeof o == "string" || (typeof o == "object" && o.constructor === String);
+	}
+	
+	function showAdvancedSearch() {
+		$("#advanced_search_div_2").hide();
+		$("#advanced_search_div").show("fast");
+		return false;
+	}
+
+	function hideAdvancedSearch() {
+		$("#advanced_search_div").hide("fast", function() {	
+			$("#advanced_search_div_2").show();
+		});
+		return false;
+	}
+	{% if limit_url_param %}
+		function submitFormSearch() {
+			$("#form_mod :input").each(function(index, elm){
+				if(elm.type == "select-multiple") {
+					if($("#form_mod :input[name=" + elm.name + "] :not(:selected)").val() == undefined) {
+						$("#form_mod :input[name=" + elm.name + "]").remove();
+					}
+				}
+			});
+			return true;
+		}
+		
+		$(function() {
+			$("#form_mod :input").each(function(index, elm){
+				if(elm.type == "select-multiple") {
+					if($("#form_mod :input[name=" + elm.name + "] :selected").val() == undefined) {
+						$("#form_mod :input[name=" + elm.name + "]").each(function(){
+							$("#form_mod :input[name=" + elm.name + "] option").attr("selected","selected"); });
+					}
+				}
+			});
+		});
+	{% endif %}
+</script>
+{% if can_select_multiple %}
+<script type="text/javascript">
+/* Javascript for checkbox select */
+function selectAllQuery() {
+	$("#query_select_all").val("1");
+	$("#prompt_query_all_div").hide();
+	
+	refreshCountDiv({{page_obj.paginator.count}});
+}
+
+function refreshCountDiv(cnt) {
+	if(cnt == null) {
+		cnt = 0;
+		$('[name=object_selected]:checked').each(function() {
+		   cnt++;
+		});
+	}
+	if (cnt == 1) {
+		$("#object_count_div").html("<span style=\"font-weight: bold\">"+cnt+"</span> "+"{% blocktrans with label=model_label %}{{label}} selected{% endblocktrans %}");
+	} else {
+		$("#object_count_div").html("<span style=\"font-weight: bold\">"+cnt+"</span> "+"{% blocktrans with label=model_label_plural %}{{label}} selected{% endblocktrans %}");
+	}
+	
+	if (cnt == 0) {
+		$("#object_count_div").hide();
+		$("#action_div").hide();
+	} else {
+		$("#object_count_div").show();
+		$("#action_div").show();
+	}
+}
+
+function confirmSubmit() {
+	{% block select_multiple_confirm_submit %}{% endblock %}
+}
+
+/* http://docs.jquery.com/Tutorials:Multiple_$(document).ready() */
+$(document).ready(function(){
+  $("[name=object_selected]").change(function() {
+	  if (typeof($(this).attr("checked")) == "undefined") { // unchecked
+		  $("#query_select_all").val("0");
+	  }
+	  
+	  var cnt = 0;
+	  $('[name=object_selected]:checked').each(function() {
+	     cnt++;
+	  });
+	  if(cnt == 0) {
+		  $("#object_select_all").removeAttr("checked");
+	  }
+	  refreshCountDiv();
+  });
+  
+  $("#object_select_all").change(function(){
+	 if (typeof($(this).attr("checked")) !== "undefined") { // selected, mark all
+		 $("[name=object_selected]").attr("checked","checked");
+		 {% if page_obj.paginator.num_pages > 1 %}
+	 	 $("#prompt_query_all_div").show();
+	 	 $("#object_count_div").hide();
+	 	 $("#action_div").show();
+	 	 {% else %}
+	 	 refreshCountDiv();
+	 	 {% endif %}
+	 } else {
+		 $("[name=object_selected]").removeAttr("checked");
+		 $("#prompt_query_all_div").hide();
+		 $("#query_select_all").val("0");
+		 refreshCountDiv(0);
+	 }
+  });
+});
+</script>
+{% endif %}
+{% block additional_js %}{% endblock %}
+{% endblock %}
+{% block content %}
+{% block top_area %}{% endblock %}
+<div class="row list-view">
+	<div class="{% block divspan %}span9{% endblock %}">
+		{% block page_header %}
+			<div class="page-header clearfix">
+				{% if can_add_new_object %}
+					<a href="new/" class="btn btn-primary pull-right">{% trans 'add' as add_label %}{{add_label|title}} <i class="icon-plus icon-white"></i></a>
+				{% endif %}
+				{% block additional_right_button %}{% endblock %}
+				<h1>{{page_title}}</h1>
+			</div>
+		{% endblock %}
+		
+		{% if summary_list %}
+			<div class="alert alert-info">
+				<b>{% trans 'Summary' %} : </b> <br/>
+				{% for summary in summary_list %}
+					{{summary}}<br/>
+				{% endfor %}
+			</div>
+	{% endif %}
+	{% block additional_content %}{% endblock %}
+	{% block search_form %}
+		{% if search_form %}
+			<form action="." method="GET" name="form_mod" id="form_mod" class="form-search form-horizontal">
+				{% for f in search_form %}
+					{% if search_form.advanced_search_index and search_form.advanced_search_index == forloop.counter0 %}
+						<div id="advanced_search_div_2">
+							<div class="control-group">
+								<div class="controls">
+									<button type="button" class="btn btn-primary" onclick="return showAdvancedSearch();">
+										{% trans 'show advanced search'|title %}
+									</button>
+								</div>
+							</div>
+						</div>
+						<div id="advanced_search_div" style="display: none">
+					{% endif %}
+					{% if f.is_hidden %}
+						{{f}}
+					{% else %}
+						<div class="form-group{% if f.errors %} has-error{% endif %}">
+							<label for="id_{{ f.name }}" class="col-sm-2 control-label">{{ f.label|title }}</label>
+							<div class="col-sm-10">
+								{{ f }}
+								{% if f.errors %}
+									<span class="has-error">{{ f.errors.0 }}</span>
+								{% endif%}
+								{% if f.help_text %}
+									<p class="help-block">{{ f.help_text|safe }}</p>
+								{% endif %}
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+				
+				{% if search_form.advanced_search_index %}
+					<div class="control-group">
+						<div class="controls">
+							<button type="button" class="btn btn-primary" onclick="return hideAdvancedSearch();">{% trans 'Hide Advanced Search' %}</button>
+						</div>
+					</div>
+				{% endif %}
+				{% block additional_search_filters %}{% endblock %}
+				<button type="submit" class="btn btn-primary" onclick="return submitFormSearch();">{% trans 'search' as label %}{{label|title}}</button>
+				<hr/>
+			</form>
+		{% endif %}<!-- /.search_form if -->
+	{% endblock %}<!-- /.search_form block -->
+
+	{% if can_export_excel %}
+		{% include 'panel/export_excel.html' %}
+	{% endif %}
+
+	{% block additional_actions %}{% endblock %}
+	
+	{% block search_result %}
+		{% if request.GET.has_search %}
+			{% if page_obj.paginator.count > 0 %}
+				<div class="alert alert-success">
+					<a class="close" data-dismiss="alert" href="./">×</a>
+					<h4 class="alert-heading">{% trans 'Found!' %}</h4>
+					{% if advanced_search_query %}
+						{% blocktrans with cnt=page_obj.paginator.count query=advanced_search_query %}{{ cnt }} search result for '{{query}}'{% endblocktrans %}
+					{% else %}
+						{% blocktrans with cnt=page_obj.paginator.count %}{{ cnt }} search result{% endblocktrans %}
+					{% endif %}
+				</div>
+			{% else %}
+				<div class="alert alert-danger">
+					<a class="close" data-dismiss="alert" href="./">×</a>
+					<h4 class="alert-heading">{% trans 'Data Not Found!' %}</h4>
+				</div>
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+
+	{% include 'homepage/messages.html' %}
+
+	{% block additional_content_before_form %}{% endblock %}
+	
+	{% if can_select_multiple %}
+		<form name="select_multiple_form" id="select_multiple_form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+	{% endif %}
+	<input type="hidden" id="query_select_all" name="query_select_all" value="0" />
+
+	<div class="alert-success" id="action_div" style="margin: 4px; padding: 4px; display: none">
+		<div id="object_count_div" style="display:none"></div>
+		{% if page_obj.paginator.num_pages > 1 %}
+			<div id="prompt_query_all_div" style="display:none">
+				{% blocktrans with cnt=page_obj.object_list.count label=model_label_plural %}All {{cnt}} {{label}} on this page are selected.{% endblocktrans %} <a href="#" onclick="selectAllQuery();">{% blocktrans with cnt=page_obj.paginator.count label=model_label_plural %}Select all {{cnt}} {{label}}?{% endblocktrans %}</a>
+			</div>
+		{% endif %}
+		
+		{% block select_multiple_submit_button %}
+			<br />
+			{% block additional_select_multiple_form %}{% endblock %}
+			<button type="submit" class="btn btn-primary" name='Save' value='Save' onclick="return confirmSubmit();">{% block select_multiple_submit_label %}{% trans 'Submit' %}{% endblock %}</button>
+		{% endblock %}
+	</div>
+	
+	<br/><br/>
+	
+	<table class="table table-bordered {% block master_table_hover %}table-hover{% endblock %}" {% block id_table %}{% endblock %}>
+		{% block master_table_headers %}
+			<thead>
+				<tr>
+					{% if can_select_multiple %}
+						<th><input type="checkbox" id="object_select_all" name="object_select_all" value="" /></th>
+					{% endif %}
+				{% block table_headers %}{% endblock %}
+				</tr>
+			</thead>
+		{% endblock %}
+		{% block master_table_body %}
+			<tbody>
+			{% for obj in object_list %}
+				{% block row_view %}
+					<tr class="row-view">
+				{% endblock %}
+				
+				{% if can_select_multiple %}
+					<td><input type="checkbox" name="object_selected" value="{{obj.id}}" /></td>
+				{% endif %}
+				
+				{% block table_rows %}{% endblock %}
+				</tr>
+				{% block additional_table_body %}{% endblock %}
+			{% endfor %}
+		{% endblock %}
+		</tbody>
+	</table>
+
+	{% include 'layouts/pagination.html' %}
+	{% block additional_content_after_table %}  {% endblock %}
+	
+	{% if can_select_multiple %}
+		</form>
+	{% endif %}
+ </div><!-- end span9 -->
+</div><!-- end row -->
+{% endblock %}
