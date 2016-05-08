@@ -1,6 +1,5 @@
 from django.db import models
-
-from dental_system.fields import NameField
+from dental_system.fields import NameField, CodeField
 from dental_system.models import DentalModel
 
 
@@ -32,8 +31,13 @@ class Specialization:
 
 
 class Dentists(DentalModel):
-    name = NameField(unique=True)
-    specialization = models.SmallIntegerField(default=0, db_index=True, choices=Specialization.choices)
+    name = NameField()
+    phone_number = models.CharField(unique=True, db_index=True, max_length=20)
+    email = models.CharField(unique=True, max_length=100)
+    address = models.TextField(null=True)
+    birth_place = models.DateField(null=True)
+    birth_date = models.DateField(null=True)
+    specialization = models.SmallIntegerField(default=Specialization.GENERAL_PRACTITIONER, db_index=True, choices=Specialization.choices)
 
     def __repr__(self):
         return '{} - {}'.format(self.name, Specialization.get_value(self.specialization))

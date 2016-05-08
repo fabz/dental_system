@@ -19,8 +19,7 @@ from django.conf import settings
 
 class DentalSystemListView(ListView):
     '''
-    Custom ListView for Ruma project.
-    All list views in Ruma project should derive from this class.
+    All list views in Dentaville project should derive from this class.
     The purpose is to standardize all list views, and reduce code duplication as possible.
     '''
 
@@ -165,7 +164,6 @@ class DentalSystemListView(ListView):
 
 class DeleteView(DeleteView):
     """
-    Custom DeleteView for Ruma project.
 
     Inheritor should override these members:
     model = Shop
