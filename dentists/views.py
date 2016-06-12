@@ -55,6 +55,8 @@ class NewView(CreateView):
     template_name = 'dentists/new.html'
     form_class = DentistsForm
 
+    # nambahin
+
     def dispatch(self, request, *args, **kwargs):
         return super(NewView, self).dispatch(request, *args, **kwargs)
 
