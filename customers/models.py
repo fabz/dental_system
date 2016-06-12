@@ -9,6 +9,11 @@ class CustomerType():
     PATIENT = 0
     PROSPECT = 1
 
+    choices = (
+        (PATIENT, 'Patient'),
+        (PROSPECT, 'Prospect'),
+    )
+
 
 class Customer(DentalModel):
     customer_type = models.SmallIntegerField(default=CustomerType.PATIENT, db_index=True, choices=CustomerType.choices)

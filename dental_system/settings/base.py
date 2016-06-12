@@ -53,6 +53,14 @@ PROJECT_APPS = (
     'homepage',
     'rest_framework',
     'dentists',
+    'customers',
+    'consumables',
+    'medical_records',
+    'prices',
+    'schedules',
+    'transactions',
+    'treatments',
+    'vendors',
 )
 
 INSTALLED_APPS = tuple(set(THIRD_PARTY_APPS).union(set(PROJECT_APPS)))

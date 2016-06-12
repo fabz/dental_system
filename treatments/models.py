@@ -11,6 +11,13 @@ class TreatmentType():
     COSMETICS = 2
     HEAVY = 3
 
+    choices = (
+        (TREATMENT, 'Treatment'),
+        (PREVENTIVE, 'Preventive'),
+        (COSMETICS, 'Cosmetics'),
+        (HEAVY, 'Heavy'),
+    )
+
 
 class Treatments(DentalModel):
     name = NameField(db_index=True)

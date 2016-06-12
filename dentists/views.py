@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from dentists.models import Dentists
+from dentists.forms import DentistsForm
 
 
 class IndexView(DentalSystemListView):
@@ -47,18 +48,17 @@ class NewView(DentalSystemListView):
     handle product category list
     /products/
     """
-#     template_name = 'dentists/new.html'
-# #     form_class = ProductNewForm
-#
-#     def get_success_url(self):
-#         add_success_message(self.request)
-#         return urlresolvers.reverse('product_index')
-#
-#     def form_valid(self, form):
-#         form = prepare_form_with_file_if_exist(form, 'image')
+    template_name = 'dentists/new.html'
+    form_class = DentistsForm
+
+    def get_success_url(self):
+        add_success_message(self.request)
+        return urlresolvers.reverse('product_index')
+
+    def form_valid(self, form):
+        form = prepare_form_with_file_if_exist(form, 'image')
 #         return save_form_data(settings.PRODUCT_API_PATH, form, self, 'product_index')
-#
-#     def form_invalid(self, form):
-#         add_error_message(self.request)
-#         return super(NewView, self).form_invalid(form)
-    pass
+
+    def form_invalid(self, form):
+        add_error_message(self.request)
+        return super(NewView, self).form_invalid(form)

@@ -19,7 +19,7 @@ class Transactions(DentalModel):
 
 class TransactionDetail(DentalModel):
     transaction = models.ForeignKey(Transactions)
-    detail_type = models.CharField(db_index=True)
+    detail_type = models.CharField(db_index=True, max_length=100)
     detail_id = models.IntegerField(db_index=True)
     qty = models.FloatField()
     discount = models.FloatField()
