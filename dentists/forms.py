@@ -9,7 +9,7 @@ class DentistsForm(forms.Form):
     phone_number = forms.CharField(max_length=25, label="Phone Number", required=True)
     email = forms.CharField(max_length=255, label="Email")
     address = forms.CharField(widget=forms.Textarea)
-    birth_place = forms.CharField(max_length=255, label="Email")
+    birth_place = forms.CharField(max_length=255, label="Email123")
 #     birth_date = forms.DateField(input_formats='%d-%m-%Y')
     specialization = forms.ChoiceField(choices=Specialization.choices, required=True)
 
