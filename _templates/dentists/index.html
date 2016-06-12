@@ -18,6 +18,7 @@
 {% block table_rows %}
     <td>{{ obj.id }}</td>
     <td>
+    	{{obj.created_time|date:'d-m-Y H:i' }}
         <div class="row-tools">
             <a href="#" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
         </div>

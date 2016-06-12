@@ -22,7 +22,7 @@ class DentalModel(models.Model):
     created_by = models.ForeignKey(User, verbose_name=ugettext('created by'))
     created_time = models.DateTimeField(default=timezone.now, db_index=True)
     modified_by = models.ForeignKey(User, null=True, related_name='+', verbose_name=ugettext('modified by'))
-    modified_time = models.DateTimeField(default=timezone.now)
+    modified_time = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True

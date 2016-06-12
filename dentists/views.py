@@ -2,9 +2,9 @@ import json
 from os.path import os
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import urlresolvers
-from django.contrib import messages
 from django.db import IntegrityError
 from django.db import transaction
 from django.db.models.aggregates import Count
@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from dentists.forms import DentistsForm
 from dentists.models import Dentists, Specialization
+from dentists.services import create_dentist_data
 
 
 class IndexView(DentalSystemListView):
@@ -39,9 +40,6 @@ class IndexView(DentalSystemListView):
         context_data = super(IndexView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
 
-        url_params = self.request.GET
-        categories = filter(None, url_params.getlist('categories'))
-
         return context_data
 
 
@@ -54,8 +52,6 @@ class NewView(CreateView):
     model = Dentists
     template_name = 'dentists/new.html'
     form_class = DentistsForm
-
-    # nambahin
 
     def dispatch(self, request, *args, **kwargs):
         return super(NewView, self).dispatch(request, *args, **kwargs)
@@ -84,8 +80,5 @@ class NewView(CreateView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        clean_form = form.cleaned_data
-        print(clean_form)
-        x = Dentists.objects.create(name=clean_form['name'], email=clean_form['email'] + 'z', address=clean_form['address'],
-                                    phone_number=clean_form['phone_number'] + '1', specialization=clean_form['specialization'])
+        create_dentist_data(form.cleaned_data)
         return super(NewView, self).form_valid(form)
