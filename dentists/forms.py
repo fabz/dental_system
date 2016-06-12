@@ -1,5 +1,4 @@
 from django import forms
-from django.conf.app_template import models
 from dentists.models import Specialization
 
 
@@ -11,11 +10,10 @@ class DentistsForm(forms.Form):
     email = forms.CharField(max_length=255, label="Email")
     address = forms.CharField(widget=forms.Textarea)
     birth_place = forms.CharField(max_length=255, label="Email")
-    birth_date = forms.DateField()
+#     birth_date = forms.DateField(input_formats='%d-%m-%Y')
     specialization = forms.ChoiceField(choices=Specialization.choices, required=True)
 
     def __init__(self, *args, **kwargs):
-        kwargs.pop('instance')
         super(DentistsForm, self).__init__(*args, **kwargs)
 
     def clean(self):
@@ -24,4 +22,8 @@ class DentistsForm(forms.Form):
 
         # Add Stop and Alert Level Validation
         cleaned_data = self.cleaned_data
+        print(cleaned_data)
         return self.cleaned_data
+
+    def save(self, commit=True):
+        return None
