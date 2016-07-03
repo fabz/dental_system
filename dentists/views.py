@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import urlresolvers
+from django.db import transaction
 from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -11,6 +12,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from dental_system.helpers import set_attributes
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from dentists.forms import DentistsForm, DentistsEditForm
 from dentists.models import Dentists, Specialization
@@ -80,7 +82,7 @@ class NewView(CreateView):
         return super(NewView, self).form_valid(form)
 
 
-class EditView(UpdateView):
+class EditView(FormView):
     form_class = DentistsEditForm
     template_name = 'dentists/edit.html'
     model = Dentists
@@ -88,6 +90,11 @@ class EditView(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         self.pk = kwargs.get('pk')
         return super(EditView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = Dentists.objects.get(id=self.pk)
+        form = self.get_form()
+        return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
         try:
@@ -115,8 +122,11 @@ class EditView(UpdateView):
         self.object = Dentists.objects.get(id=self.pk)
         return super(EditView, self).form_invalid(form)
 
+    @transaction.atomic
     def form_valid(self, form):
         try:
             dentist_obj = Dentists.objects.select_for_update().get(id=self.pk)
+            set_attributes(form.cleaned_data, dentist_obj)
+            dentist_obj.save()
         except Dentists.DoesNotExist:
             self.form_invalid(form, "Dentist not found")
