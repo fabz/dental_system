@@ -17,7 +17,7 @@ class NotDeletedManager(models.Manager):
 
 
 class DentalModel(models.Model):
-    is_active = models.BooleanField(default=False, db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
     is_deleted = models.BooleanField(default=False, db_index=True)
     created_by = models.ForeignKey(User, verbose_name=ugettext('created by'))
     created_time = models.DateTimeField(default=timezone.now, db_index=True)

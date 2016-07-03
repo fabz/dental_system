@@ -40,4 +40,4 @@ class Dentists(DentalModel):
     specialization = models.SmallIntegerField(default=Specialization.GENERAL_PRACTITIONER, db_index=True, choices=Specialization.choices)
 
     def __repr__(self):
-        return '{} - {}'.format(self.name, Specialization.get_value(self.specialization))
+        return '{} - {}'.format(self.name, Specialization.get_value(Specialization, self.specialization))
