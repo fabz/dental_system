@@ -2,10 +2,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db.models.aggregates import Count
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.utils import timezone
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -79,52 +80,43 @@ class NewView(CreateView):
         return super(NewView, self).form_valid(form)
 
 
-class EditView(FormView):
+class EditView(UpdateView):
     form_class = DentistsEditForm
     template_name = 'dentists/edit.html'
+    model = Dentists
 
-    def get(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-
-        data = Dentists.objects.get(id=kwargs.get('id')).__dict__
-
-        form = self.get_forms(form_class, data)
-        return self.render_to_response(self.get_context_data(form=form))
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         self.pk = kwargs.get('id')
-#         return super(FormView, self).dispatch(request, *args, **kwargs)
-
-#     def get_form_class(self):
-#         return FormView.get_form_class(self)
-
-#     def get_form(self, form_class):
-#         dentist = Dentists.objects.get(id=self.pk)
-#         return form_class(dentist, **self.get_form_kwargs())
+    def dispatch(self, request, *args, **kwargs):
+        self.pk = kwargs.get('pk')
+        return super(EditView, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        print(self.request.POST)
-        form = DentistsEditForm(self.request.POST, instance=Dentists.objects.get(id=kwargs.get('id')))
+        try:
+            dentist = Dentists.objects.get(id=self.pk)
+            form = DentistsEditForm(data=self.request.POST, dentist=dentist)
+        except Dentists.DoesNotExist:
+            messages.error(request, _('Dentist data does not exist'))
+            return HttpResponseRedirect(urlresolvers.reverse('dentists_index'))
+
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
-    def get_forms(self, form_class, data=None):
-        if self.request.method == "GET":
-            return form_class(data, **self.get_form_kwargs())
-        else:
-            return form_class(**self.get_form_kwargs())
+    def get_form(self, form_class):
+        dentist = Dentists.objects.get(id=self.pk)
+        return form_class(dentist=dentist)
 
     def get_success_url(self):
         add_success_message(self.request)
         return urlresolvers.reverse('dentists_index')
 
-#     def form_valid(self, form):
-#         form = prepare_form_with_file_if_exist(form, 'image')
-#         success_flag = post_form_to_backend(self.request, form)
-#         return form_valid_redirection_after_edit(self, form, success_flag, 'product_index', None, True)
-#
-#     def form_invalid(self, form):
-#         add_error_message(self.request)
-#         return super(EditView, self).form_invalid(form)
+    def form_invalid(self, form, message='Changes fail to save'):
+        messages.add_message(self.request, messages.ERROR, message)
+        self.object = Dentists.objects.get(id=self.pk)
+        return super(EditView, self).form_invalid(form)
+
+    def form_valid(self, form):
+        try:
+            dentist_obj = Dentists.objects.select_for_update().get(id=self.pk)
+        except Dentists.DoesNotExist:
+            self.form_invalid(form, "Dentist not found")

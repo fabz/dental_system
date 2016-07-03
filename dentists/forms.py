@@ -38,3 +38,7 @@ class DentistsEditForm(forms.ModelForm):
         fields = FIELDS
 
     birth_date = forms.DateField(input_formats=['%d-%m-%Y'], initial=date.today().strftime('%d-%m-%Y'), error_messages={"invalid": "Format must be dd-mm-yyyy"})
+
+    def __init__(self, *args, **kwargs):
+        kwargs.pop("dentist", None)
+        super(DentistsEditForm, self).__init__(*args, **kwargs)
