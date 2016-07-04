@@ -1,0 +1,20 @@
+{% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
+{% block additional_right_button %}
+    <a href="{% url 'trxs_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Transactions' as trxs_new %}{{trxs_new|title}}</a>
+{% endblock %}
+{% block table_headers %}
+    <tr>
+        <th><a href="?{% sort_field_query 'trx_number' %}">ID</a></th>
+        <th width="155px"><a href="?{% sort_field_query 'trx_date' %}">Created Time</a></th>
+        <th><a href="?{% sort_field_query 'customer' %}">Patient Name</a></th>
+        <th><a href="?{% sort_field_query 'total_amount' %}">Amount</a></th>
+        <th><a href="?{% sort_field_query 'dentist' %}">Dentist</a></th>
+    </tr>    
+{% endblock %}
+{% block table_rows %}
+    <td>{{ obj.trx_number }}</td>
+    <td>{{obj.trx_date|date:'d-m-Y' }}</td>
+    <td>{{ obj.customer }}</td>
+    <td>{{ obj.amount }}</td>
+    <td>{{ obj.dentist }}</td>
+{% endblock %}

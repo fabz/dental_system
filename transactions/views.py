@@ -17,6 +17,8 @@ from dental_system.views import DentalSystemListView, add_pagination, add_succes
 from dentists.forms import DentistsForm, DentistsEditForm
 from dentists.models import Dentists, Specialization
 from dentists.services import create_dentist_data
+from transactions.models import Transactions
+from transactions.forms import TrxForm
 
 
 class TrxIndexView(DentalSystemListView):
@@ -24,16 +26,16 @@ class TrxIndexView(DentalSystemListView):
     handle product category list
     /products/
     """
-    template_name = 'dentists/index.html'
-    page_title = 'Dentists Dashboard'
-    order_by_default = ['-created_time', '-id']
+    template_name = 'transactions/index.html'
+    page_title = 'Transactions Dashboard'
+    order_by_default = ['-trx_date', '-trx_number']
 #     search_form = ProductSearchForm
 
     def dispatch(self, request, *args, **kwargs):
         return super(TrxIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        return Dentists.objects.all()
+        return Transactions.objects.all()
 
     def get_context_data(self, **kwargs):
         context_data = super(TrxIndexView, self).get_context_data(**kwargs)
@@ -48,9 +50,9 @@ class TrxNewView(CreateView):
     /products/
     """
 
-    model = Dentists
-    template_name = 'dentists/new.html'
-    form_class = DentistsForm
+    model = Transactions
+    template_name = 'transactions/new.html'
+    form_class = TrxForm
 
     def dispatch(self, request, *args, **kwargs):
         return super(TrxNewView, self).dispatch(request, *args, **kwargs)

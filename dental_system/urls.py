@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^$', 'homepage.views.index', name='homepage_index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^dentists/', include('dentists.urls')),
+    url(r'^transactions/', include('transactions.urls')),
 ]
