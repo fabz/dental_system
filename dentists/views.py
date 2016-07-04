@@ -19,7 +19,7 @@ from dentists.models import Dentists, Specialization
 from dentists.services import create_dentist_data
 
 
-class IndexView(DentalSystemListView):
+class DentistsIndexView(DentalSystemListView):
     """
     handle product category list
     /products/
@@ -30,19 +30,19 @@ class IndexView(DentalSystemListView):
 #     search_form = ProductSearchForm
 
     def dispatch(self, request, *args, **kwargs):
-        return super(IndexView, self).dispatch(request, *args, **kwargs)
+        return super(DentistsIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
         return Dentists.objects.all()
 
     def get_context_data(self, **kwargs):
-        context_data = super(IndexView, self).get_context_data(**kwargs)
+        context_data = super(DentistsIndexView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
 
         return context_data
 
 
-class NewView(CreateView):
+class DentistsNewView(CreateView):
     """
     handle product category list
     /products/
@@ -53,7 +53,7 @@ class NewView(CreateView):
     form_class = DentistsForm
 
     def dispatch(self, request, *args, **kwargs):
-        return super(NewView, self).dispatch(request, *args, **kwargs)
+        return super(DentistsNewView, self).dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class):
         return form_class()
@@ -63,12 +63,12 @@ class NewView(CreateView):
         return urlresolvers.reverse('dentists_index')
 
     def get_context_data(self, **kwargs):
-        context = super(NewView, self).get_context_data(**kwargs)
+        context = super(DentistsNewView, self).get_context_data(**kwargs)
         return context
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
-        return super(NewView, self).form_invalid(form)
+        return super(DentistsNewView, self).form_invalid(form)
 
     def post(self, request, *args, **kwargs):
         form = DentistsForm(self.request.POST)
@@ -78,18 +78,18 @@ class NewView(CreateView):
             return render_to_response('dentists/new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
-        #         create_dentist_data(form.cleaned_data)
-        return super(NewView, self).form_valid(form)
+        create_dentist_data(form.cleaned_data)
+        return super(DentistsNewView, self).form_valid(form)
 
 
-class EditView(FormView):
+class DentistsEditView(FormView):
     form_class = DentistsEditForm
     template_name = 'dentists/edit.html'
     model = Dentists
 
     def dispatch(self, request, *args, **kwargs):
         self.pk = kwargs.get('pk')
-        return super(EditView, self).dispatch(request, *args, **kwargs)
+        return super(DentistsEditView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = Dentists.objects.get(id=self.pk)
@@ -120,7 +120,7 @@ class EditView(FormView):
     def form_invalid(self, form, message='Changes fail to save'):
         messages.add_message(self.request, messages.ERROR, message)
         self.object = Dentists.objects.get(id=self.pk)
-        return super(EditView, self).form_invalid(form)
+        return super(DentistsEditView, self).form_invalid(form)
 
     @transaction.atomic
     def form_valid(self, form):

@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
 
-from dentists.views import DentistsIndexView, DentistsNewView, DentistsEditView
+from transactions.views import TrxIndexView, TrxNewView
 
 
 urlpatterns = patterns('',
-                       url(r'^$', DentistsIndexView.as_view(), name='dentists_index'),
-                       url(r'^new/$', DentistsNewView.as_view(), name='dentists_new'),
-                       url(r'^(?P<pk>\d+)/edit/$', DentistsEditView.as_view(), name='dentists_edit'),
+                       url(r'^$', TrxIndexView.as_view(), name='trxs_index'),
+                       url(r'^new/$', TrxNewView.as_view(), name='trxs_new'),
+                       #                        url(r'^(?P<pk>\d+)/edit/$', EditView.as_view(), name='dentists_edit'),
                        #                        url(r'^(?P<pk>\d+)/edit_price/$', EditPriceView.as_view(), name='set_product_price'),
                        #                        url(r'^(?P<pk>\d+)/edit_bonus/$', EditBonusView.as_view(), name='set_product_bonus'),
                        #                        url(r'^(?P<pk>\d+)/toggle_activation/$', ToggleActivationView.as_view(), name='toggle_product_activation'),
