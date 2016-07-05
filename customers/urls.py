@@ -1,11 +1,11 @@
 from django.conf.urls import patterns, url
 
-from customers.views import IndexView, NewView
+from customers.views import *
 
 
 urlpatterns = patterns('',
-                       url(r'^$', IndexView.as_view(), name='customers_index'),
-                       url(r'^new/$', NewView.as_view(), name='customers_new'),
+                       url(r'^$', CustomersIndexView.as_view(), name='customers_index'),
+                       url(r'^new/$', CustomersNewView.as_view(), name='customers_new'),
                        #                        url(r'^(?P<pk>\d+)/edit/$', EditView.as_view(), name='product_edit'),
                        #                        url(r'^(?P<pk>\d+)/edit_price/$', EditPriceView.as_view(), name='set_product_price'),
                        #                        url(r'^(?P<pk>\d+)/edit_bonus/$', EditBonusView.as_view(), name='set_product_bonus'),
