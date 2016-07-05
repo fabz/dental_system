@@ -1,0 +1,22 @@
+{% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
+{% block additional_right_button %}
+    <a href="{% url 'customers_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Customer' as customers_new %}{{customers_new|title}}</a>
+{% endblock %}
+{% block table_headers %}
+    <tr>
+        <!-- <th><a href="?{% sort_field_query 'id' %}">ID</a></th> -->
+        <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
+        <th><a href="?{% sort_field_query 'date_of_birth' %}">D.O.B</a></th>
+        <th><a href="?{% sort_field_query 'phone_number1' %}">Phone Number 1</a></th>
+        <th><a href="?{% sort_field_query 'phone_number2' %}">Phone Number 2</a></th>
+        <th><a href="?{% sort_field_query 'email' %}">Email</a></th>
+    </tr>    
+{% endblock %}
+{% block table_rows %}
+    <!-- <td>{{ obj.id }}</td> -->
+    <td>{{ obj.name }}</td>
+    <td>{{ obj.date_of_birth }}</td>
+    <td>{{ obj.phone_number1 }}</td>
+    <td>{{ obj.phone_number2 }}</td>
+    <td>{{ obj.email }}</td>
+{% endblock %}

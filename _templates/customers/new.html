@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %}{% load homepage_helpers %}{% load url from future %}{% load i18n %}
+{% block title %}{% trans 'New Customer' as title_label %}{{title_label|title}}{% endblock %}
+{% block content %}
+{{ request.id }}
+<div class="row form-view">
+  <div class="span9">
+    <div class="page-header">
+      <h1>{% trans 'New Customer' as product_label %}{{product_label|title}}</h1>
+    </div>
+    {% include 'layouts/form.html' with form_back_url='customers_index'%}
+  </div><!-- end span9 -->
+  
+  <div class="span3">
+    
+  </div><!-- end span3 -->
+  
+</div><!-- end row -->
+{% endblock %}

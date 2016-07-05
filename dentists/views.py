@@ -1,9 +1,3 @@
-#<<<<<<< Updated upstream
-#=======
-import json
-from os.path import os
-from django.conf import settings
-#>>>>>>> Stashed changes
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import urlresolvers
