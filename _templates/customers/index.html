@@ -2,21 +2,54 @@
 {% block additional_right_button %}
     <a href="{% url 'customers_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Customer' as customers_new %}{{customers_new|title}}</a>
 {% endblock %}
-{% block table_headers %}
+
+{% block additional_content_before_form %}
+	<table>
+		<tr>
+			<td style="width:80px">Search By:</td>
+			<td style="width:150px">
+				<select name="search_cat">
+    				<option value="name">Name</option>
+   					<option value="phone_number1">Phone Number 1</option>
+   					<option value="phone_number2">Phone Number 2</option>
+   					<option value="email">Email</option>
+   					<option value="address">Address</option>
+				</select>
+			</td>
+			<td>
+				<input type="text" name="search_text" style="width:300px">
+			</td>
+			<td>
+				<button style="margin-left:10px" type="submit" form="form1" value="Submit">Search</button>
+			</td>
+		</tr>
+	</table>
+{% endblock %}
+
+{% block table_headers %}    
     <tr>
         <!-- <th><a href="?{% sort_field_query 'id' %}">ID</a></th> -->
+        <th style="width:40px">Edit</th>
         <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
         <th><a href="?{% sort_field_query 'date_of_birth' %}">D.O.B</a></th>
         <th><a href="?{% sort_field_query 'phone_number1' %}">Phone Number 1</a></th>
         <th><a href="?{% sort_field_query 'phone_number2' %}">Phone Number 2</a></th>
         <th><a href="?{% sort_field_query 'email' %}">Email</a></th>
+        <th style="width:300px"><a href="?{% sort_field_query 'email' %}">Address</a></th>
     </tr>    
 {% endblock %}
 {% block table_rows %}
     <!-- <td>{{ obj.id }}</td> -->
+    <td>
+    	<div class="row-tools">
+            <a href="{% url 'customers_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
+    </td>
     <td>{{ obj.name }}</td>
     <td>{{ obj.date_of_birth }}</td>
     <td>{{ obj.phone_number1 }}</td>
     <td>{{ obj.phone_number2 }}</td>
     <td>{{ obj.email }}</td>
+    <td>{{ obj.address }}</td>
 {% endblock %}
+
