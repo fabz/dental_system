@@ -32,8 +32,8 @@ class CustomersIndexView(DentalSystemListView):
         return super(CustomersIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        if self.request.GET.get('name', None):
-            return Customer.objects.filter(name__icontains=self.request.GET['name'])
+        if self.request.GET.get('name', None) or self.request.GET.get('phone_number', None) or self.request.GET.get('address', None):
+            return Customer.objects.filter(name__icontains=self.request.GET['name'], phone_number1__icontains=self.request.GET['phone_number'], address__icontains=self.request.GET['address']) | Customer.objects.filter(name__icontains=self.request.GET['name'], phone_number2__icontains=self.request.GET['phone_number'], address__icontains=self.request.GET['address'])
         else:
             return Customer.objects.all()
 

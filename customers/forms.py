@@ -39,4 +39,8 @@ class CustomersEditForm(forms.ModelForm):
 
 
 class CustomerSearchForm(SearchForm):
-    name = forms.CharField(required=False)
+    
+    
+    name = forms.CharField(required=False, label='Search by Name')
+    phone_number = forms.CharField(required=False, label='Search by Phone#')
+    address = forms.CharField(required=False, label='Search by Address')
