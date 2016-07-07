@@ -74,15 +74,16 @@ class TreatmentsNewView(CreateView):
         if form.is_valid():
             return self.form_valid(form)
         else:
+            print({'form': form})
             return render_to_response('treatments/new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
         return super(TreatmentsNewView, self).form_valid(form)
 
 
-class TreatmentsEditView(FormView):
+class TreatmentsEditView(UpdateView):
     form_class = TreatmentsEditForm
-    template_name = 'dentists/edit.html'
+    template_name = 'treatments/edit.html'
     model = Treatments
 
     def dispatch(self, request, *args, **kwargs):
@@ -91,29 +92,26 @@ class TreatmentsEditView(FormView):
 
     def get(self, request, *args, **kwargs):
         self.object = Treatments.objects.get(id=self.pk)
-        form = self.get_form()
+        form = self.get_form(self.form_class)
         return self.render_to_response(self.get_context_data(form=form))
 
-    def post(self, request, *args, **kwargs):
-        try:
-            dentist = Treatments.objects.get(id=self.pk)
-            form = TreatmentsEditView(data=self.request.POST, dentist=dentist)
-        except Treatments.DoesNotExist:
-            messages.error(request, _('Dentist data does not exist'))
-            return HttpResponseRedirect(urlresolvers.reverse('dentists_index'))
+    def get_form(self, form_class, data=None):
+        if self.request.method == 'GET':
+            data = Treatments.objects.get(id=self.pk).__dict__
+            return form_class(data, **self.get_form_kwargs())
+        else:
+            return form_class(**self.get_form_kwargs())
 
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
-    def get_form(self, form_class):
-        dentist = Treatments.objects.get(id=self.pk)
-        return form_class(dentist=dentist)
-
     def get_success_url(self):
         add_success_message(self.request)
-        return urlresolvers.reverse('dentists_index')
+        return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
 
     def form_invalid(self, form, message='Changes fail to save'):
         messages.add_message(self.request, messages.ERROR, message)
@@ -127,4 +125,6 @@ class TreatmentsEditView(FormView):
             set_attributes(form.cleaned_data, treatment_obj)
             treatment_obj.save()
         except Treatments.DoesNotExist:
-            self.form_invalid(form, "Dentist not found")
+            self.form_invalid(form, "Treatment data not found")
+
+        return self.get_success_url()

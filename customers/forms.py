@@ -37,10 +37,6 @@ class CustomersEditForm(forms.ModelForm):
     email = forms.EmailField(required=False, error_messages={"invalid": "Invalid email address"})
     date_of_birth = forms.DateField(label='D.O.B* (dd-mm-yyyy)', input_formats=['%d-%m-%Y'], error_messages={"invalid": "Format must be dd-mm-yyyy"})
 
-    def __init__(self, *args, **kwargs):
-        kwargs.pop("customer", None)
-        super(CustomersEditForm, self).__init__(*args, **kwargs)
-
 
 class CustomerSearchForm(SearchForm):
     

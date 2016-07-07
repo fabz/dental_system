@@ -1,8 +1,11 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db import transaction
 from django.db.models.aggregates import Count
+from django.forms.fields import DateField
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -51,80 +54,24 @@ class DentistsNewView(CreateView):
     template_name = 'dentists/new.html'
     form_class = DentistsNewForm
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(DentistsNewView, self).dispatch(request, *args, **kwargs)
-
-    def get_form(self, form_class):
-        return form_class()
-
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
         return urlresolvers.reverse('dentists_index')
-
-    def get_context_data(self, **kwargs):
-        context = super(DentistsNewView, self).get_context_data(**kwargs)
-        return context
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(DentistsNewView, self).form_invalid(form)
 
-    def post(self, request, *args, **kwargs):
-        form = DentistsNewForm(self.request.POST)
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return render_to_response('dentists/new.html', {'form': form}, context_instance=RequestContext(request))
 
-    def form_valid(self, form):
-        return super(DentistsNewView, self).form_valid(form)
-
-
-class DentistsEditView(FormView):
+class DentistsEditView(UpdateView):
     form_class = DentistsEditForm
     template_name = 'dentists/edit.html'
     model = Dentists
 
-    def dispatch(self, request, *args, **kwargs):
-        self.pk = kwargs.get('pk')
-        return super(DentistsEditView, self).dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        self.object = Dentists.objects.get(id=self.pk)
-        form = self.get_form()
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def post(self, request, *args, **kwargs):
-        try:
-            dentist = Dentists.objects.get(id=self.pk)
-            form = DentistsEditForm(data=self.request.POST, dentist=dentist)
-        except Dentists.DoesNotExist:
-            messages.error(request, _('Dentist data does not exist'))
-            return HttpResponseRedirect(urlresolvers.reverse('dentists_index'))
-
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def get_form(self, form_class):
-        dentist = Dentists.objects.get(id=self.pk)
-        return form_class(dentist=dentist)
-
     def get_success_url(self):
         add_success_message(self.request)
-        return urlresolvers.reverse('dentists_index')
+        return urlresolvers.reverse("dentists_index")
 
-    def form_invalid(self, form, message='Changes fail to save'):
-        messages.add_message(self.request, messages.ERROR, message)
-        self.object = Dentists.objects.get(id=self.pk)
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(DentistsEditView, self).form_invalid(form)
-
-    @transaction.atomic
-    def form_valid(self, form):
-        try:
-            dentist_obj = Dentists.objects.select_for_update().get(id=self.pk)
-            set_attributes(form.cleaned_data, dentist_obj)
-            dentist_obj.save()
-        except Dentists.DoesNotExist:
-            self.form_invalid(form, "Dentist not found")

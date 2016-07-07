@@ -1,6 +1,11 @@
+from django.core import urlresolvers
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.http.response import HttpResponseRedirect
+
 from dental_system.fields import NameField, CodeField
-from dental_system.models import DentalModel
+from dental_system.models import DentalModel, get_value
+from dental_system.views import add_success_message
 
 
 class Specialization:
@@ -23,11 +28,7 @@ class Specialization:
     )
 
     def get_value(self, stats):
-        for choice in self.choices:
-            if(choice[0] == stats):
-                return choice[1]
-
-        return 'Unlimited (blank)'
+        return get_value(self, stats)
 
 
 class Dentists(DentalModel):
@@ -36,7 +37,7 @@ class Dentists(DentalModel):
     email = models.CharField(unique=True, max_length=100)
     address = models.TextField(null=True)
     birth_place = models.CharField(null=True, max_length=100)
-    birth_date = models.DateField(null=True)
+    birth_date = models.DateField(null=True, help_text="DD-MM-YYYY")
     specialization = models.SmallIntegerField(default=Specialization.GENERAL_PRACTITIONER, db_index=True, choices=Specialization.choices)
 
     def __str__(self):

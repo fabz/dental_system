@@ -2,7 +2,7 @@
 from django.db import models
 
 from dental_system.fields import NameField
-from dental_system.models import DentalModel
+from dental_system.models import DentalModel, get_value
 
 
 class TreatmentType():
@@ -17,6 +17,9 @@ class TreatmentType():
         (COSMETICS, 'Cosmetics'),
         (HEAVY, 'Heavy'),
     )
+
+    def get_value(self, stats):
+        return get_value(self, stats)
 
 
 class Treatments(DentalModel):
