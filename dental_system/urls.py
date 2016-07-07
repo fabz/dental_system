@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^transactions/', include('transactions.urls')),
     url(r'^treatments/', include('treatments.urls')),
     url(r'^customers/', include('customers.urls')),
+    url(r'^vendors/', include('vendors.urls')),
 ]
