@@ -105,11 +105,14 @@ class TreatmentsEditView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         try:
-            treatment = Treatments.objects.get(id=self.pk)
-            form = TreatmentsEditView(data=self.request.POST, treatment=treatment)
+            #             treatment = Treatments.objects.get(id=self.pk)
+            form = self.get_form()
+#             form = TreatmentsEditForm(data=self.request.POST, treatment=treatment)
         except Treatments.DoesNotExist:
             messages.error(request, _('Treatment data does not exist'))
             return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
+
+        print('form nih', form)
 
         if form.is_valid():
             return self.form_valid(form)
@@ -118,7 +121,7 @@ class TreatmentsEditView(UpdateView):
 
     def get_success_url(self):
         add_success_message(self.request)
-        return urlresolvers.reverse('dentists_index')
+        return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
 
     def form_invalid(self, form, message='Changes fail to save'):
         messages.add_message(self.request, messages.ERROR, message)
@@ -133,3 +136,5 @@ class TreatmentsEditView(UpdateView):
             treatment_obj.save()
         except Treatments.DoesNotExist:
             self.form_invalid(form, "Dentist not found")
+
+        return self.get_success_url()
