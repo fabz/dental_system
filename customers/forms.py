@@ -43,4 +43,5 @@ class CustomersEditForm(forms.ModelForm):
 
 
 class CustomerSearchForm(SearchForm):
+    search_by = forms.ChoiceField(required=False, choices=('name', 'email'))
     name = forms.CharField(required=False)

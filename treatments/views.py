@@ -74,15 +74,16 @@ class TreatmentsNewView(CreateView):
         if form.is_valid():
             return self.form_valid(form)
         else:
+            print({'form': form})
             return render_to_response('treatments/new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
         return super(TreatmentsNewView, self).form_valid(form)
 
 
-class TreatmentsEditView(FormView):
+class TreatmentsEditView(UpdateView):
     form_class = TreatmentsEditForm
-    template_name = 'dentists/edit.html'
+    template_name = 'treatments/edit.html'
     model = Treatments
 
     def dispatch(self, request, *args, **kwargs):
@@ -91,25 +92,29 @@ class TreatmentsEditView(FormView):
 
     def get(self, request, *args, **kwargs):
         self.object = Treatments.objects.get(id=self.pk)
-        form = self.get_form()
+        form = self.get_form(self.form_class)
+        print("b;lbalbal", self.get_context_data(form=form))
         return self.render_to_response(self.get_context_data(form=form))
+
+    def get_form(self, form_class, data=None):
+        if self.request.method == 'GET':
+            data = Treatments.objects.get(id=self.pk).__dict__
+            return form_class(data, **self.get_form_kwargs())
+        else:
+            return form_class(**self.get_form_kwargs())
 
     def post(self, request, *args, **kwargs):
         try:
-            dentist = Treatments.objects.get(id=self.pk)
-            form = TreatmentsEditView(data=self.request.POST, dentist=dentist)
+            treatment = Treatments.objects.get(id=self.pk)
+            form = TreatmentsEditView(data=self.request.POST, treatment=treatment)
         except Treatments.DoesNotExist:
-            messages.error(request, _('Dentist data does not exist'))
-            return HttpResponseRedirect(urlresolvers.reverse('dentists_index'))
+            messages.error(request, _('Treatment data does not exist'))
+            return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
 
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-    def get_form(self, form_class):
-        dentist = Treatments.objects.get(id=self.pk)
-        return form_class(dentist=dentist)
 
     def get_success_url(self):
         add_success_message(self.request)
