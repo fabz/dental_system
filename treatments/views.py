@@ -93,7 +93,6 @@ class TreatmentsEditView(UpdateView):
     def get(self, request, *args, **kwargs):
         self.object = Treatments.objects.get(id=self.pk)
         form = self.get_form(self.form_class)
-        print("b;lbalbal", self.get_context_data(form=form))
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_form(self, form_class, data=None):
@@ -104,16 +103,7 @@ class TreatmentsEditView(UpdateView):
             return form_class(**self.get_form_kwargs())
 
     def post(self, request, *args, **kwargs):
-        try:
-            #             treatment = Treatments.objects.get(id=self.pk)
-            form = self.get_form()
-#             form = TreatmentsEditForm(data=self.request.POST, treatment=treatment)
-        except Treatments.DoesNotExist:
-            messages.error(request, _('Treatment data does not exist'))
-            return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
-
-        print('form nih', form)
-
+        form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
         else:
@@ -135,6 +125,6 @@ class TreatmentsEditView(UpdateView):
             set_attributes(form.cleaned_data, treatment_obj)
             treatment_obj.save()
         except Treatments.DoesNotExist:
-            self.form_invalid(form, "Dentist not found")
+            self.form_invalid(form, "Treatment data not found")
 
         return self.get_success_url()

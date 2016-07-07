@@ -1,6 +1,11 @@
+from django.core import urlresolvers
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.http.response import HttpResponseRedirect
+
 from dental_system.fields import NameField, CodeField
 from dental_system.models import DentalModel, get_value
+from dental_system.views import add_success_message
 
 
 class Specialization:
