@@ -4,6 +4,14 @@ from django.utils import timezone
 from django.utils.translation import ugettext
 
 
+def get_value(model, stats):
+    for choice in model.choices:
+        if(choice[0] == stats):
+            return choice[1]
+
+    return 'Unlimited (blank)'
+
+
 class ActiveManager(models.Manager):
 
     def get_queryset(self):

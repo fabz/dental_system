@@ -9,10 +9,6 @@
         <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
         <th><a href="?{% sort_field_query 'description' %}">Description</a></th>
         <th><a href="?{% sort_field_query 'treatment_type' %}">Treatment Type</a></th>
-        <th><a href="?{% sort_field_query 'is_deleted' %}">Deleted?</a></th>
-        {% if rank_enabled == 1 %}
-            <th>Rank</th>
-        {% endif %}
     </tr>    
 {% endblock %}
 {% block table_rows %}
@@ -24,7 +20,6 @@
         </div>
     </td>
     <td>{{ obj.name }}</td>
-    <td>{{ obj.specialization|get_specialization_view|safe }}</td>
-    <td>{{ obj.is_active|get_status_view|safe }}</td>
-    <td>{{ obj.is_deleted|get_status_view|safe }}</td>
+    <td>{{ obj.description }}</td>
+    <td>{{ obj.treatment_type|get_treatment_type_view|safe }}</td>
 {% endblock %}

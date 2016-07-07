@@ -1,6 +1,6 @@
 from django.db import models
 from dental_system.fields import NameField, CodeField
-from dental_system.models import DentalModel
+from dental_system.models import DentalModel, get_value
 
 
 class Specialization:
@@ -23,11 +23,7 @@ class Specialization:
     )
 
     def get_value(self, stats):
-        for choice in self.choices:
-            if(choice[0] == stats):
-                return choice[1]
-
-        return 'Unlimited (blank)'
+        return get_value(self, stats)
 
 
 class Dentists(DentalModel):

@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.utils.timezone import localtime
 from django.utils.translation import ugettext
 from dentists.models import Specialization
+from treatments.models import TreatmentType
 
 
 register = template.Library()
@@ -241,6 +242,11 @@ def get_range(value):
 @register.filter
 def get_status_view(value):
     return '<span class="glyphicon glyphicon-ok"></span>' if value else '<span class="glyphicon glyphicon-remove"></span>'
+
+
+@register.filter
+def get_treatment_type_view(value):
+    return TreatmentType.get_value(TreatmentType, value)
 
 
 @register.filter
