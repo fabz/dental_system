@@ -6,17 +6,30 @@ from vendors.models import Vendors
 
 
 class Consumables(DentalModel):
+    sku = CodeField(db_index=True)
     name = models.CharField(max_length=255, unique=True, db_index=True)
-    reference_code = CodeField()
     description = models.TextField()
-    vendor = models.ForeignKey(Vendors)
+    is_sellable = models.BooleanField()
+    
 
     def __unicode__(self):
         return "{} - {}".format(self.name, self.vendor.name)
 
 
-class ConsumablesPrice(DentalModel):
+class ConsumablesPricing(DentalModel):
     consumable = models.ForeignKey(Consumables)
     start_date = models.DateField()
     end_date = models.DateField(null=True)
-    price = models.FloatField()
+    sell_price = models.FloatField()
+
+class ConsumablesStock(DentalModel):
+    consumable = models.ForeignKey(Consumables)
+    quantity = models.IntegerField()
+
+class ConsumablesStockMutation(DentalModel):
+    consumable = models.ForeignKey(Consumables)
+    mutation_qty = models.IntegerField()
+    price_pcs = models.FloatField()
+    vendors = models.ForeignKey(Vendors)
+
+
