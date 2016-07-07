@@ -23,7 +23,7 @@ class TreatmentType():
 
 
 class Treatments(DentalModel):
-    name = NameField(db_index=True)
+    name = NameField(db_index=True, unique=True)
     description = models.TextField()
     treatment_type = models.SmallIntegerField(default=TreatmentType.TREATMENT, db_index=True, choices=TreatmentType.choices)
 #     consumables

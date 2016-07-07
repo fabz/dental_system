@@ -37,7 +37,7 @@ class Dentists(DentalModel):
     email = models.CharField(unique=True, max_length=100)
     address = models.TextField(null=True)
     birth_place = models.CharField(null=True, max_length=100)
-    birth_date = models.DateField(null=True, help_text="DD-MM-YYYY")
+    birth_date = models.DateField(null=True)
     specialization = models.SmallIntegerField(default=Specialization.GENERAL_PRACTITIONER, db_index=True, choices=Specialization.choices)
 
     def __str__(self):
