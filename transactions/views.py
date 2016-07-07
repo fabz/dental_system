@@ -80,5 +80,5 @@ class TrxNewView(CreateView):
             return render_to_response('transactions/new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
-        #         create_dentist_data(form.cleaned_data)
+        print(form.cleaned_data)
         return super(TrxNewView, self).form_valid(form)
