@@ -17,8 +17,8 @@ from dental_system.views import DentalSystemListView, add_pagination, add_succes
 from dentists.forms import DentistsForm, DentistsEditForm
 from dentists.models import Dentists, Specialization
 from dentists.services import create_dentist_data
+from transactions.forms import TrxNewForm
 from transactions.models import Transactions
-from transactions.forms import TrxForm
 
 
 class TrxIndexView(DentalSystemListView):
@@ -52,7 +52,7 @@ class TrxNewView(CreateView):
 
     model = Transactions
     template_name = 'transactions/new.html'
-    form_class = TrxForm
+    form_class = TrxNewForm
 
     def dispatch(self, request, *args, **kwargs):
         return super(TrxNewView, self).dispatch(request, *args, **kwargs)
@@ -62,7 +62,7 @@ class TrxNewView(CreateView):
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
-        return urlresolvers.reverse('dentists_index')
+        return urlresolvers.reverse('trxs_index')
 
     def get_context_data(self, **kwargs):
         context = super(TrxNewView, self).get_context_data(**kwargs)
@@ -73,11 +73,11 @@ class TrxNewView(CreateView):
         return super(TrxNewView, self).form_invalid(form)
 
     def post(self, request, *args, **kwargs):
-        form = DentistsForm(self.request.POST)
+        form = TrxNewForm(self.request.POST)
         if form.is_valid():
             return self.form_valid(form)
         else:
-            return render_to_response('dentists/new.html', {'form': form}, context_instance=RequestContext(request))
+            return render_to_response('transactions/new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
         #         create_dentist_data(form.cleaned_data)
