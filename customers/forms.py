@@ -3,6 +3,7 @@ from datetime import date
 from django import forms
 
 from customers.models import Customer
+from dental_system.forms import SearchForm
 
 
 FIELDS = ['customer_type', 'name', 'place_of_birth', 'date_of_birth', 'phone_number1', 'phone_number2', 'email', 'address']
@@ -39,3 +40,7 @@ class CustomersEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         kwargs.pop("customer", None)
         super(CustomersEditForm, self).__init__(*args, **kwargs)
+
+
+class CustomerSearchForm(SearchForm):
+    name = forms.CharField(required=False)

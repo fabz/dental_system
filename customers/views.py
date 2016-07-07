@@ -26,13 +26,16 @@ class CustomersIndexView(DentalSystemListView):
     template_name = 'customers/index.html'
     page_title = 'Customers Dashboard'
     order_by_default = ['-created_time', '-id']
-#     search_form = ProductSearchForm
+    search_form = CustomerSearchForm
 
     def dispatch(self, request, *args, **kwargs):
         return super(CustomersIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        return Customer.objects.all()
+        if self.request.GET.get('name', None):
+            return Customer.objects.filter(name__icontains=self.request.GET['name'])
+        else:
+            return Customer.objects.all()
 
     def get_context_data(self, **kwargs):
         context_data = super(CustomersIndexView, self).get_context_data(**kwargs)
