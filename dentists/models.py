@@ -39,5 +39,5 @@ class Dentists(DentalModel):
     birth_date = models.DateField(null=True)
     specialization = models.SmallIntegerField(default=Specialization.GENERAL_PRACTITIONER, db_index=True, choices=Specialization.choices)
 
-    def __repr__(self):
+    def __str__(self):
         return '{} - {}'.format(self.name, Specialization.get_value(Specialization, self.specialization))

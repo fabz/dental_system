@@ -27,5 +27,5 @@ class Customer(DentalModel):
     id_number = CodeField(db_index=True)
     photo = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} - {}".format(self.name, self.phone_number1)
