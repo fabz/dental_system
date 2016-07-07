@@ -16,7 +16,6 @@ from dental_system.helpers import set_attributes
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from customers.forms import *
 from customers.models import Customer, CustomerType
-from customers.services import create_customer_data
 
 
 class CustomersIndexView(DentalSystemListView):
@@ -78,10 +77,9 @@ class CustomersNewView(CreateView):
             return render_to_response('customers/new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
-        #create_customer_data(form.cleaned_data)
         return super(CustomersNewView, self).form_valid(form)
-    
-    
+
+
 class CustomersEditView(FormView):
     form_class = CustomersEditForm
     template_name = 'customers/edit.html'

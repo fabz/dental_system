@@ -14,9 +14,6 @@ from rest_framework.views import APIView
 
 from dental_system.helpers import set_attributes
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
-from dentists.forms import DentistsForm, DentistsEditForm
-from dentists.models import Dentists, Specialization
-from dentists.services import create_dentist_data
 from transactions.forms import TrxNewForm
 from transactions.models import Transactions
 

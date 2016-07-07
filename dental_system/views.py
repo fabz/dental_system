@@ -1,7 +1,5 @@
 from base64 import b64encode
-import json
 import time
-import urllib
 
 from django.contrib import messages
 from django.core import urlresolvers
@@ -10,8 +8,6 @@ from django.http import HttpResponse, HttpResponseRedirect, QueryDict
 from django.utils.translation import ugettext
 from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
-
-from django.conf import settings
 
 # from django.contrib.auth.decorators import login_required, permission_required
 # from django.utils.decorators import method_decorator

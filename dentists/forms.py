@@ -8,7 +8,7 @@ from dentists.models import Specialization, Dentists
 FIELDS = ['name', 'phone_number', 'email', 'address', 'birth_place', 'birth_date', 'specialization']
 
 
-class DentistsForm(forms.ModelForm):
+class DentistsNewForm(forms.ModelForm):
 
     class Meta:
         model = Dentists

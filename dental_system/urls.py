@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^dentists/', include('dentists.urls')),
     url(r'^transactions/', include('transactions.urls')),
+    url(r'^treatments/', include('treatments.urls')),
     url(r'^customers/', include('customers.urls')),
 ]
