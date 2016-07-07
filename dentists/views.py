@@ -54,41 +54,24 @@ class DentistsNewView(CreateView):
     template_name = 'dentists/new.html'
     form_class = DentistsNewForm
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(DentistsNewView, self).dispatch(request, *args, **kwargs)
-
-    def get_form(self, form_class):
-        return form_class()
-
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
         return urlresolvers.reverse('dentists_index')
 
-    def get_context_data(self, **kwargs):
-        context = super(DentistsNewView, self).get_context_data(**kwargs)
-        return context
-
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(DentistsNewView, self).form_invalid(form)
-
-    def post(self, request, *args, **kwargs):
-        form = DentistsNewForm(self.request.POST)
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return render_to_response('dentists/new.html', {'form': form}, context_instance=RequestContext(request))
-
-    def form_valid(self, form):
-        return super(DentistsNewView, self).form_valid(form)
 
 
 class DentistsEditView(UpdateView):
     form_class = DentistsEditForm
     template_name = 'dentists/edit.html'
     model = Dentists
-#     fields = ['name', 'phone_number', 'email', 'address', 'birth_place', 'birth_date', 'specialization']
 
     def get_success_url(self):
         add_success_message(self.request)
         return urlresolvers.reverse("dentists_index")
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
+        return super(DentistsEditView, self).form_invalid(form)

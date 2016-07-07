@@ -27,6 +27,3 @@ class DentistsEditForm(forms.ModelForm):
     email = forms.EmailField(required=False, error_messages={"invalid": "Invalid email address"})
     birth_date = forms.DateField(input_formats=['%d-%m-%Y'], initial=date.today().strftime('%d-%m-%Y'),
                                  error_messages={"invalid": "Format must be dd-mm-yyyy"})
-
-    def __init__(self, *args, **kwargs):
-        super(DentistsEditForm, self).__init__(*args, **kwargs)

@@ -54,33 +54,13 @@ class CustomersNewView(CreateView):
     template_name = 'customers/new.html'
     form_class = CustomersForm
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(CustomersNewView, self).dispatch(request, *args, **kwargs)
-
-    def get_form(self, form_class):
-        return form_class()
-
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
         return urlresolvers.reverse('customers_index')
 
-    def get_context_data(self, **kwargs):
-        context = super(CustomersNewView, self).get_context_data(**kwargs)
-        return context
-
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(CustomersNewView, self).form_invalid(form)
-
-    def post(self, request, *args, **kwargs):
-        form = CustomersForm(self.request.POST)
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return render_to_response('customers/new.html', {'form': form}, context_instance=RequestContext(request))
-
-    def form_valid(self, form):
-        return super(CustomersNewView, self).form_valid(form)
 
 
 class CustomersEditView(UpdateView):
@@ -91,3 +71,7 @@ class CustomersEditView(UpdateView):
     def get_success_url(self):
         add_success_message(self.request)
         return urlresolvers.reverse("customers_index")
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
+        return super(CustomersEditView, self).form_invalid(form)
