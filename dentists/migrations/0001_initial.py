@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
 from django.conf import settings
-import dental_system.fields
+from django.db import migrations, models
 import django.utils.timezone
+
+import dental_system.fields
 
 
 class Migration(migrations.Migration):
@@ -28,7 +29,8 @@ class Migration(migrations.Migration):
                 ('address', models.TextField(null=True)),
                 ('birth_place', models.CharField(max_length=100, null=True)),
                 ('birth_date', models.DateField(null=True)),
-                ('specialization', models.SmallIntegerField(db_index=True, default=0, choices=[(0, 'GP'), (1, 'Perio'), (2, 'Bedah Mulut'), (3, 'Konservasi Gigi'), (4, 'Ortho'), (5, 'Prostho'), (6, 'Pedo')])),
+                ('specialization', models.SmallIntegerField(db_index=True, default=0, choices=[
+                 (0, 'GP'), (1, 'Perio'), (2, 'Bedah Mulut'), (3, 'Konservasi Gigi'), (4, 'Ortho'), (5, 'Prostho'), (6, 'Pedo')])),
                 ('created_by', models.ForeignKey(verbose_name='created by', to=settings.AUTH_USER_MODEL)),
                 ('modified_by', models.ForeignKey(verbose_name='modified by', null=True, related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
