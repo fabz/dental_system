@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %}{% load homepage_helpers %}{% load url from future %}{% load i18n %}
+{% block title %}{% trans 'Consumables' as consumables_label %}{{consumables_label|title}}{% endblock %}
+{% block content %}
+{{ request.id }}
+<div class="row form-view">
+  <div class="span9">
+    <div class="page-header">
+      <h1>{% trans 'Edit Consumables Price Data' as consumables_label %}{{consumables_label|title}}</h1>
+    </div>
+	{% include 'layouts/form.html' with form_back_url='consumables_index' %}    
+  </div><!-- end span9 -->
+  
+  <div class="span3">
+    
+  </div><!-- end span3 -->
+  
+</div><!-- end row -->
+{% endblock %}

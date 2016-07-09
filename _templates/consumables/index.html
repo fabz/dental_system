@@ -1,0 +1,32 @@
+{% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
+{% block additional_right_button %}
+    <a href="{% url 'consumables_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Consumable' as consumables_new %}{{consumables_new|title}}</a>
+{% endblock %}
+
+{% block table_headers %}    
+    <tr>
+        <!-- <th><a href="?{% sort_field_query 'id' %}">ID</a></th> -->
+        <th style="width:40px">Edit</th>
+        <th><a href="?{% sort_field_query 'sku' %}">Sku</a></th>
+        <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
+        <th><a href="?{% sort_field_query 'description' %}">Description</a></th>
+        <th><a href="?{% sort_field_query 'is_sellable' %}">Is Sellable?</a></th>
+        <!-- <th><a href="?{% sort_field_query 'sell_price' %}">Sell Price</a></th> -->
+        <!-- <th><a href="?{% sort_field_query 'quantity' %}">Qty</a></th> -->
+    </tr>    
+{% endblock %}
+{% block table_rows %}
+    <!-- <td>{{ obj.id }}</td> -->
+    <td>
+    	<div class="row-tools">
+            <a href="{% url 'consumables_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
+    </td>
+    <td>{{ obj.sku }}</td>
+    <td>{{ obj.name }}</td>
+    <td>{{ obj.description }}</td>
+    <td>{{ obj.is_sellable }}</td>
+    <!-- <td>{{ obj.sell_price }}</td> -->
+    <!-- <td>{{ obj.quantity }}</td> -->
+{% endblock %}
+

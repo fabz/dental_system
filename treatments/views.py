@@ -4,7 +4,6 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from treatments.models import Treatments
-from treatments.forms import TreatmentsEditForm
 
 FIELDS = ['name', 'description', 'treatment_type']
 
