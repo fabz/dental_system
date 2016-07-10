@@ -45,7 +45,7 @@ class ConsumablesIndexView(DentalSystemListView):
         return context_data
 
 
-class ConsumablesNewView(CreateView):
+class ConsumablesNewView(FormView):
     """
     handle product category list
     /products/
@@ -64,19 +64,8 @@ class ConsumablesNewView(CreateView):
         return super(ConsumablesNewView, self).form_invalid(form)
 
     def form_valid(self, form):
-        print(form.cleaned_data)
-
         create_new_consumables(form.cleaned_data)
-
-        return self.get_success_url()
-
-
-def form_valid(self, form):
-
-    article = form.save(commit=False)
-    article.author = self.request.user
-    # article.save()  # This is redundant, see comments.
-    return super(CreateArticle, self).form_valid(form)
+        return super(ConsumablesNewView, self).form_valid(form)
 
 
 class ConsumablesEditView(UpdateView):
