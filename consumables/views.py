@@ -12,10 +12,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dental_system.helpers import set_attributes
-from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from consumables.forms import *
 from consumables.models import *
+from consumables.services import create_new_consumables
+from dental_system.helpers import set_attributes
+from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 
 
 class ConsumablesIndexView(DentalSystemListView):
@@ -33,10 +34,9 @@ class ConsumablesIndexView(DentalSystemListView):
 
     def get_initial_queryset(self):
         if self.request.GET.get('sku', None) or self.request.GET.get('name', None) or self.request.GET.get('is_sellable', None):
-            return ConsumablesPricing.objects.select_related('consumable').filter(sku__icontains=self.request.GET['sku'], name__icontains=self.request.GET['name'], is_sellable=self.request.GET['is_sellable'])
-            #return Consumables.objects.filter(sku__icontains=self.request.GET['sku'], name__icontains=self.request.GET['name'], is_sellable=self.request.GET['is_sellable'])
+            return ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], consumable__is_sellable=self.request.GET['is_sellable'])
         else:
-            return ConsumablesPricing.objects.all().select_related('consumable')
+            return ConsumablesPricing.objects.all()
 
     def get_context_data(self, **kwargs):
         context_data = super(ConsumablesIndexView, self).get_context_data(**kwargs)
@@ -54,29 +54,29 @@ class ConsumablesNewView(CreateView):
     model = Consumables
     template_name = 'consumables/new.html'
     form_class = ConsumablesForm
-    
-    
+
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
-        return urlresolvers.reverse('consumables_index',kwargs={'consumable_id': self.kwargs['consumable_id']})
+        return urlresolvers.reverse('consumables_index')
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesNewView, self).form_invalid(form)
-    
-#    def form_valid(self,form):
-#        consumablespricing = form.save(commit=False)
-#        consumablespricing.consumable = self.request.consumables
-#        
-#        ConsumablesPricing(sell_price = )
-#       return super(ConsumablesNewView, self).form_valid(form)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+
+        create_new_consumables(form.cleaned_data)
+
+        return self.get_success_url()
+
 
 def form_valid(self, form):
-    
-        article = form.save(commit=False)
-        article.author = self.request.user
-        #article.save()  # This is redundant, see comments.
-        return super(CreateArticle, self).form_valid(form)
+
+    article = form.save(commit=False)
+    article.author = self.request.user
+    # article.save()  # This is redundant, see comments.
+    return super(CreateArticle, self).form_valid(form)
 
 
 class ConsumablesEditView(UpdateView):
