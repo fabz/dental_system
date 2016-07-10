@@ -11,8 +11,8 @@
         <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
         <th><a href="?{% sort_field_query 'description' %}">Description</a></th>
         <th><a href="?{% sort_field_query 'is_sellable' %}">Is Sellable?</a></th>
-        <!-- <th><a href="?{% sort_field_query 'sell_price' %}">Sell Price</a></th> -->
-        <!-- <th><a href="?{% sort_field_query 'quantity' %}">Qty</a></th> -->
+        <th><a href="?{% sort_field_query 'quantity' %}">Qty</a></th>
+        <th><a href="?{% sort_field_query 'sell_price' %}">Sell Price (in IDR)</a></th>
     </tr>    
 {% endblock %}
 {% block table_rows %}
@@ -22,11 +22,11 @@
             <a href="{% url 'consumables_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
         </div>
     </td>
-    <td>{{ obj.sku }}</td>
-    <td>{{ obj.name }}</td>
-    <td>{{ obj.description }}</td>
-    <td>{{ obj.is_sellable }}</td>
-    <!-- <td>{{ obj.sell_price }}</td> -->
-    <!-- <td>{{ obj.quantity }}</td> -->
+    <td>{{ obj.consumable.sku }}</td>
+    <td>{{ obj.consumable.name }}</td>
+    <td>{{ obj.consumable.description }}</td>
+    <td>{{ obj.consumable.is_sellable }}</td>
+    <td>{{ obj.consumable.quantity }}</td>
+    <td>{{ obj.sell_price }}</td>
 {% endblock %}
 

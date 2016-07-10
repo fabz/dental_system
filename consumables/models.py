@@ -10,6 +10,7 @@ class Consumables(DentalModel):
     name = models.CharField(max_length=255, unique=True, db_index=True)
     description = models.TextField()
     is_sellable = models.BooleanField()
+    quantity = models.IntegerField()
     
 
     def __unicode__(self):
@@ -21,10 +22,6 @@ class ConsumablesPricing(DentalModel):
     start_date = models.DateField()
     end_date = models.DateField(null=True)
     sell_price = models.FloatField()
-
-class ConsumablesStock(DentalModel):
-    consumable = models.ForeignKey(Consumables)
-    quantity = models.IntegerField()
 
 class ConsumablesStockMutation(DentalModel):
     consumable = models.ForeignKey(Consumables)

@@ -1,9 +1,10 @@
 from datetime import date
 
 from django import forms
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.forms.models import inlineformset_factory
+from django.core.validators import MinLengthValidator, MaxLengthValidator,RegexValidator
 
-from consumables.models import Consumables
+from consumables.models import *
 from dental_system.forms import SearchForm
 
 
@@ -16,10 +17,11 @@ class ConsumablesForm(forms.ModelForm):
         model = Consumables
         fields = FIELDS
     
-    sku = forms.Field(label='SKU*', validators=[MinLengthValidator(8),MaxLengthValidator(8)], widget=forms.TextInput(attrs={'size':'8', 'maxlength':'8'}))
+    sku = forms.Field(label='SKU*', validators=[RegexValidator(regex='^\d{8}$', message='SKU must be 8 digit number'),MinLengthValidator(8),MaxLengthValidator(8)], widget=forms.TextInput(attrs={'size':'8', 'maxlength':'8'}))
     name = forms.Field(label='Name*')
     description = forms.CharField(label='Description*', widget=forms.Textarea())
-    is_sellable = forms.BooleanField(label='Is Sellable?*')
+    is_sellable = forms.BooleanField(label='Is Sellable?', required=False)
+    sell_price = forms.FloatField(label='Sell Price (in IDR)')
 
 
 class ConsumablesEditForm(forms.ModelForm):

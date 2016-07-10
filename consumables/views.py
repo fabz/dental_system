@@ -32,10 +32,11 @@ class ConsumablesIndexView(DentalSystemListView):
         return super(ConsumablesIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        if self.request.GET.get('name', None):
-            return Consumables.objects.filter(name__icontains=self.request.GET['name'])
+        if self.request.GET.get('sku', None) or self.request.GET.get('name', None) or self.request.GET.get('is_sellable', None):
+            return ConsumablesPricing.objects.select_related('consumable').filter(sku__icontains=self.request.GET['sku'], name__icontains=self.request.GET['name'], is_sellable=self.request.GET['is_sellable'])
+            #return Consumables.objects.filter(sku__icontains=self.request.GET['sku'], name__icontains=self.request.GET['name'], is_sellable=self.request.GET['is_sellable'])
         else:
-            return Consumables.objects.all()
+            return ConsumablesPricing.objects.all().select_related('consumable')
 
     def get_context_data(self, **kwargs):
         context_data = super(ConsumablesIndexView, self).get_context_data(**kwargs)
@@ -54,13 +55,28 @@ class ConsumablesNewView(CreateView):
     template_name = 'consumables/new.html'
     form_class = ConsumablesForm
     
+    
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
-        return urlresolvers.reverse('consumables_index')
+        return urlresolvers.reverse('consumables_index',kwargs={'consumable_id': self.kwargs['consumable_id']})
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesNewView, self).form_invalid(form)
+    
+#    def form_valid(self,form):
+#        consumablespricing = form.save(commit=False)
+#        consumablespricing.consumable = self.request.consumables
+#        
+#        ConsumablesPricing(sell_price = )
+#       return super(ConsumablesNewView, self).form_valid(form)
+
+def form_valid(self, form):
+    
+        article = form.save(commit=False)
+        article.author = self.request.user
+        #article.save()  # This is redundant, see comments.
+        return super(CreateArticle, self).form_valid(form)
 
 
 class ConsumablesEditView(UpdateView):
