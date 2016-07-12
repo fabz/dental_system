@@ -29,5 +29,5 @@ class Treatments(DentalModel):
 #     consumables
 #     consumables_qty
 
-    def __unicode__(self):
-        return "{} - {}".format(self.name, self.treatment_type)
+    def __str__(self):
+        return "{} - {}".format(self.name, TreatmentType.get_value(TreatmentType, self.treatment_type))

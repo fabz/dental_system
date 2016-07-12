@@ -1,9 +1,16 @@
 from django.contrib import messages
 from django.core import urlresolvers
-from django.views.generic.edit import CreateView, UpdateView
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template.context import RequestContext
+from django.views.generic.base import View
+from django.views.generic.edit import CreateView, UpdateView, FormView
 
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
+from prices.models import Prices
+from treatments.forms import TreatmentsEditPriceForm
 from treatments.models import Treatments
+
 
 FIELDS = ['name', 'description', 'treatment_type']
 
@@ -63,3 +70,27 @@ class TreatmentsEditView(UpdateView):
         messages.add_message(self.request, messages.ERROR, message)
         self.object = Treatments.objects.get(id=self.pk)
         return super(TreatmentsEditView, self).form_invalid(form)
+
+
+class TreatmentsEditPriceView(FormView):
+    form_class = TreatmentsEditPriceForm
+    template_name = 'treatments/edit_prices.html'
+
+    def get_success_url(self):
+        add_success_message(self.request)
+        return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(treat_id=kwargs['pk'])
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        treat_id = kwargs['pk']
+        sell_price = request.POST['sell_price']
+        try:
+            price_obj = Prices.objects.get(treatments=Treatments.objects.get(id=treat_id))
+            price_obj.price = sell_price
+            price_obj.save()
+        except Prices.DoesNotExist:
+            price_obj = Prices.objects.create(treatments=Treatments.objects.get(id=treat_id), price=sell_price)
+        return self.get_success_url()

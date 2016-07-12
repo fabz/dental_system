@@ -9,6 +9,7 @@
         <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
         <th><a href="?{% sort_field_query 'description' %}">Description</a></th>
         <th><a href="?{% sort_field_query 'treatment_type' %}">Treatment Type</a></th>
+        <th>Price</th>
     </tr>    
 {% endblock %}
 {% block table_rows %}
@@ -17,9 +18,11 @@
     	{{obj.created_time|date:'d-m-Y H:i' }}
         <div class="row-tools">
             <a href="{% url 'treatments_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        	<a href="{% url 'treatments_price_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit_price' as edit_price_label %}{{edit_price_label|title}}"><span class="glyphicon glyphicon-usd"></span></a>
         </div>
     </td>
     <td>{{ obj.name }}</td>
     <td>{{ obj.description }}</td>
     <td>{{ obj.treatment_type|get_treatment_type_view|safe }}</td>
+    <td>{{ obj.prices.price}}</td>
 {% endblock %}

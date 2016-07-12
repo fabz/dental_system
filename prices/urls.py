@@ -1,14 +1,10 @@
 from django.conf.urls import patterns, url
 
-from treatments.views import TreatmentsIndexView, TreatmentsNewView,\
-    TreatmentsEditView, TreatmentsEditPriceView
-
 
 urlpatterns = patterns('',
-                       url(r'^$', TreatmentsIndexView.as_view(), name='treatments_index'),
-                       url(r'^new/$', TreatmentsNewView.as_view(), name='treatments_new'),
-                       url(r'^(?P<pk>\d+)/edit/$', TreatmentsEditView.as_view(), name='treatments_edit'),
-                       url(r'^(?P<pk>\d+)/edit_prices/$', TreatmentsEditPriceView.as_view(), name='treatments_price_edit'),
+                       #                        url(r'^$', PricesIndexView.as_view(), name='prices_index'),
+                       #                        url(r'^new/$', PricesNewView.as_view(), name='prices_new'),
+                       #                        url(r'^(?P<pk>\d+)/edit/$', PricesEditView.as_view(), name='prices_edit'),
                        #                        url(r'^(?P<pk>\d+)/edit_price/$', EditPriceView.as_view(), name='set_product_price'),
                        #                        url(r'^(?P<pk>\d+)/edit_bonus/$', EditBonusView.as_view(), name='set_product_bonus'),
                        #                        url(r'^(?P<pk>\d+)/toggle_activation/$', ToggleActivationView.as_view(), name='toggle_product_activation'),
