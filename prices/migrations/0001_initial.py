@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from django.conf import settings
 import django.utils.timezone
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -17,14 +17,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Prices',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
-                ('is_active', models.BooleanField(default=True, db_index=True)),
-                ('is_deleted', models.BooleanField(default=False, db_index=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
+                ('is_active', models.BooleanField(db_index=True, default=True)),
+                ('is_deleted', models.BooleanField(db_index=True, default=False)),
                 ('created_time', models.DateTimeField(default=django.utils.timezone.now, db_index=True)),
                 ('modified_time', models.DateTimeField(auto_now=True)),
-                ('price', models.CharField(max_length=30)),
+                ('price', models.FloatField()),
                 ('created_by', models.ForeignKey(verbose_name='created by', to=settings.AUTH_USER_MODEL)),
-                ('modified_by', models.ForeignKey(verbose_name='modified by', to=settings.AUTH_USER_MODEL, null=True, related_name='+')),
+                ('modified_by', models.ForeignKey(related_name='+', verbose_name='modified by', to=settings.AUTH_USER_MODEL, null=True)),
                 ('treatments', models.OneToOneField(to='treatments.Treatments')),
             ],
             options={
@@ -34,15 +34,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PricesHistories',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
-                ('is_active', models.BooleanField(default=True, db_index=True)),
-                ('is_deleted', models.BooleanField(default=False, db_index=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
+                ('is_active', models.BooleanField(db_index=True, default=True)),
+                ('is_deleted', models.BooleanField(db_index=True, default=False)),
                 ('created_time', models.DateTimeField(default=django.utils.timezone.now, db_index=True)),
                 ('modified_time', models.DateTimeField(auto_now=True)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField(null=True)),
+                ('sell_price', models.FloatField()),
+                ('start_date', models.DateTimeField()),
+                ('end_date', models.DateTimeField(null=True)),
                 ('created_by', models.ForeignKey(verbose_name='created by', to=settings.AUTH_USER_MODEL)),
-                ('modified_by', models.ForeignKey(verbose_name='modified by', to=settings.AUTH_USER_MODEL, null=True, related_name='+')),
+                ('modified_by', models.ForeignKey(related_name='+', verbose_name='modified by', to=settings.AUTH_USER_MODEL, null=True)),
                 ('price', models.ForeignKey(to='prices.Prices')),
             ],
             options={

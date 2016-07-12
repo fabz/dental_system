@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core import urlresolvers
+from django.db import transaction
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -8,6 +9,7 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from prices.models import Prices
+from prices.services import create_price_history
 from treatments.forms import TreatmentsEditPriceForm
 from treatments.models import Treatments
 
@@ -86,11 +88,16 @@ class TreatmentsEditPriceView(FormView):
 
     def post(self, request, *args, **kwargs):
         treat_id = kwargs['pk']
-        sell_price = request.POST['sell_price']
+        sell_price = float(request.POST['sell_price'])
         try:
-            price_obj = Prices.objects.get(treatments=Treatments.objects.get(id=treat_id))
-            price_obj.price = sell_price
-            price_obj.save()
+            with transaction.atomic():
+                price_obj = Prices.objects.get(treatments=Treatments.objects.get(id=treat_id))
+                if price_obj.price != sell_price:
+                    price_obj.price = sell_price
+                    price_obj.save()
+                    create_price_history(price_obj)
         except Prices.DoesNotExist:
-            price_obj = Prices.objects.create(treatments=Treatments.objects.get(id=treat_id), price=sell_price)
+            with transaction.atomic():
+                price_obj = Prices.objects.create(treatments=Treatments.objects.get(id=treat_id), price=sell_price)
+                create_price_history(price_obj)
         return self.get_success_url()
