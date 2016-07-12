@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 
 from consumables.forms import *
 from consumables.models import *
-from consumables.services import create_new_consumables
+from consumables.services import *
 from dental_system.helpers import set_attributes
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 
@@ -80,3 +80,63 @@ class ConsumablesEditView(UpdateView):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesEditView, self).form_invalid(form)
+    
+
+class ConsumablesStockinIndexView(DentalSystemListView):
+
+    template_name = 'consumables/stockin_index.html'
+    page_title = 'Consumables - Stock In'
+    order_by_default = ['-created_time', '-id']
+    #search_form = ConsumableSearchForm
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(ConsumablesStockinIndexView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial_queryset(self):
+        #if self.request.GET.get('sku', None) or self.request.GET.get('name', None) or self.request.GET.get('is_sellable', None):
+        #    return ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], consumable__is_sellable=self.request.GET['is_sellable'])
+        #else:
+            return ConsumablesStockMutation.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context_data = super(ConsumablesStockinIndexView, self).get_context_data(**kwargs)
+        context_data = add_pagination(self.request, context_data)
+
+        return context_data
+  
+    
+class ConsumablesStockinNewView(UpdateView):
+    """
+    handle product category list
+    /products/
+    """
+
+    model = Consumables
+    template_name = 'consumables/stockin_new.html'
+    form_class = ConsumablesStockinForm
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
+        return urlresolvers.reverse('consumables_index')
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
+        return super(ConsumablesStockinNewView, self).form_invalid(form)
+
+    def form_valid(self, form):
+        create_new_consumables_stockin(form.cleaned_data)
+        return super(ConsumablesStockinNewView, self).form_valid(form)
+
+
+class ConsumablesStockinEditView(UpdateView):
+    form_class = ConsumablesStockinEditForm
+    template_name = 'consumables/stockin_edit.html'
+    model = Consumables
+
+    def get_success_url(self):
+        add_success_message(self.request)
+        return urlresolvers.reverse("consumables_index")
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
+        return super(ConsumablesStockinEditView, self).form_invalid(form)

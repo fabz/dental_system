@@ -2,7 +2,8 @@ from datetime import date
 
 from django.db import transaction
 
-from consumables.models import Consumables, ConsumablesPricing
+from consumables.models import *
+from vendors.models import *
 
 
 def create_new_consumables(clean_form):
@@ -15,3 +16,19 @@ def create_new_consumables(clean_form):
     with transaction.atomic():
         cons_obj = Consumables.objects.create(sku=sku, name=name, description=description, is_sellable=is_sellable, quantity=0)
         ConsumablesPricing.objects.create(consumable=cons_obj, start_date=date.today(), sell_price=sell_price)
+
+
+def create_new_consumables_stockin(clean_form):
+    sku = clean_form['sku']
+    name = clean_form['name']
+    vendors = clean_form['vendors']
+    mutation_qty = clean_form['mutation_qty']
+    price_pcs = clean_form['price_pcs']
+    
+    quantity = Consumables.objects.get(sku=sku).quantity
+    cons_obj = Consumables.objects.get(sku=sku)
+    vendor_obj = Vendors.objects.get(name=vendors)
+
+    with transaction.atomic():
+        Consumables.objects.filter(sku=sku).update(quantity = quantity+mutation_qty)
+        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = mutation_qty, price_pcs = price_pcs, vendors = vendor_obj)

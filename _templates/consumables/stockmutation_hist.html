@@ -1,0 +1,26 @@
+{% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
+{% block additional_right_button %}
+    <a href="{% url 'stockin_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Consumable - Stock In' as stockin_new %}{{stockin_new|title}}</a>
+{% endblock %}
+
+{% block table_headers %}    
+    <tr>
+        <th style="width:40px">Edit</th>
+        <th><a href="?{% sort_field_query 'sku' %}">Sku</a></th>
+        <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
+        <th><a href="?{% sort_field_query 'mutation_qty' %}">Stock In Qty</a></th>
+        <th><a href="?{% sort_field_query 'price_pcs' %}">Price per Pcs</a></th>
+    </tr>    
+{% endblock %}
+{% block table_rows %}
+    <td>
+    	<div class="row-tools">
+            <a href="{% url 'consumables_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
+    </td>
+    <td>{{ obj.consumable.sku }}</td>
+    <td>{{ obj.consumable.name }}</td>
+    <td>{{ obj.mutation_qty }}</td>
+    <td>{{ obj.price_pcs }}</td>
+{% endblock %}
+
