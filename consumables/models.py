@@ -28,5 +28,6 @@ class ConsumablesStockMutation(DentalModel):
     mutation_qty = models.IntegerField()
     price_pcs = models.FloatField()
     vendors = models.ForeignKey(Vendors)
+    remarks = models.TextField()
 
 

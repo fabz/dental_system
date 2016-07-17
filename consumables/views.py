@@ -11,6 +11,7 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from itertools import chain
 
 from consumables.forms import *
 from consumables.models import *
@@ -21,8 +22,8 @@ from dental_system.views import DentalSystemListView, add_pagination, add_succes
 
 class ConsumablesIndexView(DentalSystemListView):
     """
-    handle product category list
-    /products/
+    TO DO:
+    - get price data out in the table
     """
     template_name = 'consumables/index.html'
     page_title = 'consumables Dashboard'
@@ -33,10 +34,15 @@ class ConsumablesIndexView(DentalSystemListView):
         return super(ConsumablesIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        if self.request.GET.get('sku', None) or self.request.GET.get('name', None) or self.request.GET.get('is_sellable', None):
-            return ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], consumable__is_sellable=self.request.GET['is_sellable'])
-        else:
-            return ConsumablesPricing.objects.all()
+        if self.request.GET.get('is_sellable', None):
+            cons_price = ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], consumable__is_sellable=self.request.GET['is_sellable'], end_date=None)         
+            return Consumables.objects.filter(consumablespricing=cons_price) 
+        elif self.request.GET.get('sku', None) or self.request.GET.get('name', None):
+            cons_price = ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], end_date=None)         
+            return Consumables.objects.filter(consumablespricing=cons_price) 
+        else:         
+            cons_price = ConsumablesPricing.objects.filter(end_date=None)
+            return Consumables.objects.filter(consumablespricing=cons_price)
 
     def get_context_data(self, **kwargs):
         context_data = super(ConsumablesIndexView, self).get_context_data(**kwargs)
@@ -47,8 +53,7 @@ class ConsumablesIndexView(DentalSystemListView):
 
 class ConsumablesNewView(FormView):
     """
-    handle product category list
-    /products/
+    DONE
     """
 
     model = Consumables
@@ -69,6 +74,7 @@ class ConsumablesNewView(FormView):
 
 
 class ConsumablesEditView(UpdateView):
+    
     form_class = ConsumablesEditForm
     template_name = 'consumables/edit.html'
     model = Consumables
@@ -81,6 +87,39 @@ class ConsumablesEditView(UpdateView):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesEditView, self).form_invalid(form)
     
+    def form_valid(self, form):
+        create_new_pricing(form.cleaned_data)
+        return super(ConsumablesEditView, self).form_valid(form)
+    
+'''    
+class TreatmentsEditPriceView(FormView):
+    form_class = TreatmentsEditPriceForm
+    template_name = 'treatments/edit_prices.html'
+
+    def get_success_url(self):
+        add_success_message(self.request)
+        return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(treat_id=kwargs['pk'])
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        treat_id = kwargs['pk']
+        sell_price = float(request.POST['sell_price'])
+        try:
+            with transaction.atomic():
+                price_obj = Prices.objects.get(treatments=Treatments.objects.get(id=treat_id))
+                if price_obj.price != sell_price:
+                    price_obj.price = sell_price
+                    price_obj.save()
+                    create_price_history(price_obj)
+        except Prices.DoesNotExist:
+            with transaction.atomic():
+                price_obj = Prices.objects.create(treatments=Treatments.objects.get(id=treat_id), price=sell_price)
+                create_price_history(price_obj)
+        return self.get_success_url()
+  '''  
 
 class ConsumablesStockinIndexView(DentalSystemListView):
 
@@ -140,3 +179,23 @@ class ConsumablesStockinEditView(UpdateView):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesStockinEditView, self).form_invalid(form)
+    
+    
+
+class ConsumablesStockoutNewView(UpdateView):
+
+    model = Consumables
+    template_name = 'consumables/stockout_new.html'
+    form_class = ConsumablesStockOutForm
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
+        return urlresolvers.reverse('consumables_index')
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
+        return super(ConsumablesStockOutNewView, self).form_invalid(form)
+
+    def form_valid(self, form):
+        create_new_consumables_stockout(form.cleaned_data)
+        return super(ConsumablesStockOutNewView, self).form_valid(form)

@@ -29,15 +29,24 @@ class ConsumablesEditForm(forms.ModelForm):
     class Meta:
         model = Consumables
         fields = FIELDS
-
+    
     sku = forms.Field(label='SKU', widget=forms.TextInput(attrs={'readonly':'readonly'}))
     name = forms.Field(label='Name', widget=forms.TextInput(attrs={'readonly':'readonly'}))
     description = forms.CharField(label='Description*', widget=forms.Textarea())
-    is_sellable = forms.BooleanField(label='Is Sellable?*')
-    sell_price = forms.FloatField(label='Sell Price (in IDR)')
+    is_sellable = forms.BooleanField(label='Is Sellable?*', required=False)
+    sell_price = forms.FloatField(label='Sell Price (in IDR)', initial = float(ConsumablesPricing.objects.get(id=cons_price_id).sell_price))
+    
+ #   treatment = Treatments.objects.get(id=treat_id)
+    
+
+    #consumable = Consumables.objects.get()
+    
+    
+ #   self.fields['sell_price'].initial = float(ConsumablesPricing.objects.get(consumables=consumable).sell_price)
+
 
     def __init__(self, *args, **kwargs):
-        kwargs.pop("consumable", None)
+        cons_price_id = kwargs.pop("consumable", None)
         super(ConsumablesEditForm, self).__init__(*args, **kwargs)
 
 
@@ -76,3 +85,16 @@ class ConsumablesStockinEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         kwargs.pop("consumable", None)
         super(ConsumablesEditForm, self).__init__(*args, **kwargs)
+        
+
+class ConsumablesStockOutForm(forms.ModelForm):
+
+    class Meta:
+        model = Consumables
+        fields = ['sku', 'name', 'vendors', 'mutation_qty', 'price_pcs']
+    
+    sku = forms.Field(label='SKU', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    name = forms.Field(label='Name', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    vendors = forms.ModelChoiceField(queryset=Vendors.objects.all(), empty_label=None) 
+    mutation_qty = forms.IntegerField(label='Stock Out Quantity')
+    price_pcs = forms.FloatField(label='Price per Piece')

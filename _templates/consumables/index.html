@@ -31,7 +31,7 @@
     </td>
     <td>
     	<div class="row-tools">
-            <a href="#" class="btn btn-mini btn-primary btn-xs" title="Stock Out"><span class="glyphicon glyphicon-minus"></span></a>
+            <a href="{% url 'stockout_new' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="Stock Out"><span class="glyphicon glyphicon-minus"></span></a>
         </div>
     </td>
      <td>
@@ -39,11 +39,11 @@
             <a href="#" class="btn btn-mini btn-primary btn-xs" title="Stock Mutation History"><span class="glyphicon glyphicon-list-alt"></span></a>
         </div>
     </td>
-    <td>{{ obj.consumable.sku }}</td>
-    <td>{{ obj.consumable.name }}</td>
-    <td>{{ obj.consumable.description }}</td>
-    <td>{{ obj.consumable.is_sellable }}</td>
-    <td>{{ obj.consumable.quantity }}</td>
-    <td>{{ obj.sell_price }}</td>
+    <td>{{ obj.sku }}</td>
+    <td>{{ obj.name }}</td>
+    <td>{{ obj.description }}</td>
+    <td>{{ obj.is_sellable }}</td>
+    <td>{{ obj.quantity }}</td>
+    <td>{{ obj.consumablespricing.sell_price }}</td>
 {% endblock %}
 
