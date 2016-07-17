@@ -35,12 +35,13 @@ class ConsumablesIndexView(DentalSystemListView):
 
     def get_initial_queryset(self):
         if self.request.GET.get('is_sellable', None):
-            cons_price = ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], consumable__is_sellable=self.request.GET['is_sellable'], end_date=None)         
-            return Consumables.objects.filter(consumablespricing=cons_price) 
+            cons_price = ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET[
+                                                           'name'], consumable__is_sellable=self.request.GET['is_sellable'], end_date=None)
+            return Consumables.objects.filter(consumablespricing=cons_price)
         elif self.request.GET.get('sku', None) or self.request.GET.get('name', None):
-            cons_price = ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], end_date=None)         
-            return Consumables.objects.filter(consumablespricing=cons_price) 
-        else:         
+            cons_price = ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], end_date=None)
+            return Consumables.objects.filter(consumablespricing=cons_price)
+        else:
             cons_price = ConsumablesPricing.objects.filter(end_date=None)
             return Consumables.objects.filter(consumablespricing=cons_price)
 
@@ -74,7 +75,7 @@ class ConsumablesNewView(FormView):
 
 
 class ConsumablesEditView(UpdateView):
-    
+
     form_class = ConsumablesEditForm
     template_name = 'consumables/edit.html'
     model = Consumables
@@ -86,11 +87,11 @@ class ConsumablesEditView(UpdateView):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesEditView, self).form_invalid(form)
-    
+
     def form_valid(self, form):
         create_new_pricing(form.cleaned_data)
         return super(ConsumablesEditView, self).form_valid(form)
-    
+
 '''    
 class TreatmentsEditPriceView(FormView):
     form_class = TreatmentsEditPriceForm
@@ -119,7 +120,8 @@ class TreatmentsEditPriceView(FormView):
                 price_obj = Prices.objects.create(treatments=Treatments.objects.get(id=treat_id), price=sell_price)
                 create_price_history(price_obj)
         return self.get_success_url()
-  '''  
+  '''
+
 
 class ConsumablesStockinIndexView(DentalSystemListView):
 
@@ -132,18 +134,18 @@ class ConsumablesStockinIndexView(DentalSystemListView):
         return super(ConsumablesStockinIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        #if self.request.GET.get('sku', None) or self.request.GET.get('name', None) or self.request.GET.get('is_sellable', None):
+        # if self.request.GET.get('sku', None) or self.request.GET.get('name', None) or self.request.GET.get('is_sellable', None):
         #    return ConsumablesPricing.objects.filter(consumable__sku__icontains=self.request.GET['sku'], consumable__name__icontains=self.request.GET['name'], consumable__is_sellable=self.request.GET['is_sellable'])
-        #else:
-            return ConsumablesStockMutation.objects.all()
+        # else:
+        return ConsumablesStockMutation.objects.all()
 
     def get_context_data(self, **kwargs):
         context_data = super(ConsumablesStockinIndexView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
 
         return context_data
-  
-    
+
+
 class ConsumablesStockinNewView(UpdateView):
     """
     handle product category list
@@ -179,8 +181,7 @@ class ConsumablesStockinEditView(UpdateView):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesStockinEditView, self).form_invalid(form)
-    
-    
+
 
 class ConsumablesStockoutNewView(UpdateView):
 
