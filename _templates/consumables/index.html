@@ -44,6 +44,6 @@
     <td>{{ obj.description }}</td>
     <td>{{ obj.is_sellable }}</td>
     <td>{{ obj.quantity }}</td>
-    <td>{{ obj.consumablespricing.sell_price }}</td>
+	<td>{{ obj.get_active_price }}</td>
 {% endblock %}
 
