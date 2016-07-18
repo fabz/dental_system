@@ -38,6 +38,7 @@ class ConsumablesEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         cons_price_id = kwargs.pop("consumable", None)
+        print(cons_price_id)
         if cons_price_id:
             self.fields['sell_price'].initial = float(ConsumablesPricing.objects.get(consumables=cons_price_id).sell_price)
         super(ConsumablesEditForm, self).__init__(*args, **kwargs)
