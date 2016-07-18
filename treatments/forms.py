@@ -3,6 +3,15 @@ from treatments.models import Treatments
 from prices.models import Prices
 
 
+class TreatmentsNewForm(forms.ModelForm):
+
+    class Meta:
+        model = Treatments
+        fields = ['name', 'description', 'treatment_type']
+
+    sell_price = forms.FloatField(label='Sell Price (in IDR)')
+
+
 class TreatmentsEditPriceForm(forms.Form):
 
     sell_price = forms.FloatField(label='Sell Price (in IDR)')
