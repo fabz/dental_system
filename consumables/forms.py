@@ -2,9 +2,9 @@
 from django import forms
 from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
 
-from consumables.models import *
-from vendors.models import *
+from consumables.models import Consumables, ConsumablesPricing
 from dental_system.forms import SearchForm
+from vendors.models import Vendors
 
 
 FIELDS = ['sku', 'name', 'description', 'is_sellable']

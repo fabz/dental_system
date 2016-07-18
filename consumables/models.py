@@ -11,10 +11,12 @@ class Consumables(DentalModel):
     description = models.TextField()
     is_sellable = models.BooleanField()
     quantity = models.IntegerField()
-    
 
     def __unicode__(self):
         return "{} - {}".format(self.name, self.vendor.name)
+
+    def get_active_price(self):
+        return self.consumablespricing_set.filter(end_date=None)[0].sell_price
 
 
 class ConsumablesPricing(DentalModel):
@@ -23,11 +25,10 @@ class ConsumablesPricing(DentalModel):
     end_date = models.DateField(null=True)
     sell_price = models.FloatField()
 
+
 class ConsumablesStockMutation(DentalModel):
     consumable = models.ForeignKey(Consumables)
     mutation_qty = models.IntegerField()
     price_pcs = models.FloatField()
     vendors = models.ForeignKey(Vendors)
     remarks = models.TextField()
-
-
