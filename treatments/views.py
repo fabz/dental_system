@@ -10,8 +10,9 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from prices.models import Prices
 from prices.services import create_price_history
-from treatments.forms import TreatmentsEditPriceForm
+from treatments.forms import TreatmentsEditPriceForm, TreatmentsNewForm
 from treatments.models import Treatments
+from treatments.services import create_new_treatments
 
 
 FIELDS = ['name', 'description', 'treatment_type']
@@ -40,23 +41,26 @@ class TreatmentsIndexView(DentalSystemListView):
         return context_data
 
 
-class TreatmentsNewView(CreateView):
+class TreatmentsNewView(FormView):
     """
     handle product category list
     /products/
     """
-
-    model = Treatments
+    models = Treatments
     template_name = 'treatments/new.html'
-    fields = FIELDS
+    form_class = TreatmentsNewForm
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
-        return urlresolvers.reverse('treatments_index')
+        return HttpResponseRedirect(urlresolvers.reverse('treatments_index'))
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(TreatmentsNewView, self).form_invalid(form)
+
+    def form_valid(self, form):
+        create_new_treatments(form.cleaned_data)
+        return self.get_success_url()
 
 
 class TreatmentsEditView(UpdateView):
