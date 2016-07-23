@@ -6,8 +6,7 @@
 {% block table_headers %}    
     <tr>
         <th style="width:40px">Edit</th>
-        <th style="width:40px">In</th>
-        <th style="width:40px">Out</th>
+        <th style="width:40px">Mut</th>
         <th style="width:40px">Hist</th>
         <th><a href="?{% sort_field_query 'sku' %}">Sku</a></th>
         <th><a href="?{% sort_field_query 'name' %}">Name</a></th>
@@ -26,17 +25,12 @@
     </td>
     <td>
     	<div class="row-tools">
-            <a href="{% url 'stockin_new' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="Stock In"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-    </td>
-    <td>
-    	<div class="row-tools">
-            <a href="{% url 'stockout_new' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="Stock Out"><span class="glyphicon glyphicon-minus"></span></a>
+            <a href="{% url 'mutation_new' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="Mutation"><span class="glyphicon glyphicon-transfer"></span></a>
         </div>
     </td>
      <td>
     	<div class="row-tools">
-            <a href="#" class="btn btn-mini btn-primary btn-xs" title="Stock Mutation History"><span class="glyphicon glyphicon-list-alt"></span></a>
+            <a href="{% url 'mutation_hist' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="Stock Mutation History"><span class="glyphicon glyphicon-list-alt"></span></a>
         </div>
     </td>
     <td>{{ obj.sku }}</td>

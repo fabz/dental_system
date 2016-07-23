@@ -1,5 +1,5 @@
 from datetime import date
-
+from django.utils import timezone
 from django.db import transaction
 
 from consumables.models import *
@@ -18,49 +18,37 @@ def create_new_consumables(clean_form):
         ConsumablesPricing.objects.create(consumable=cons_obj, start_date=date.today(), sell_price=sell_price)
 
 
-def create_new_consumables_stockin(clean_form):
+def create_new_consumables_mutation(clean_form):
+    mutation_type = clean_form['mutation_type']
     sku = clean_form['sku']
     name = clean_form['name']
     vendors = clean_form['vendors']
     mutation_qty = clean_form['mutation_qty']
     price_pcs = clean_form['price_pcs']
     
-    quantity = Consumables.objects.get(sku=sku).quantity
     cons_obj = Consumables.objects.get(sku=sku)
     vendor_obj = Vendors.objects.get(name=vendors)
-
-    with transaction.atomic():
-        Consumables.objects.get(sku=sku).update(quantity = quantity+mutation_qty)
+    
+    if int(mutation_type) == 0:
+        '''Stock In'''
+        cons_obj.quantity = cons_obj.quantity+int(mutation_qty)
+        cons_obj.save()
         ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = mutation_qty, price_pcs = price_pcs, vendors = vendor_obj)
+    else:
+        '''Stock Out'''
+        cons_obj.quantity = cons_obj.quantity-int(mutation_qty)
+        cons_obj.save()
+        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = -1*mutation_qty, price_pcs = 0, vendors = "N/A")
+
         
-def create_new_consumables_stockout(clean_form):
-    sku = clean_form['sku']
-    name = clean_form['name']
-    vendors = clean_form['vendors']
-    mutation_qty = clean_form['mutation_qty']
-    price_pcs = clean_form['price_pcs']
-    
-    quantity = Consumables.objects.get(sku=sku).quantity
+def create_new_pricing(consumablespricing_obj,sell_price, sku):
+    '''
+    create consumables price history
+    ''' 
+    time_updated = timezone.now()
     cons_obj = Consumables.objects.get(sku=sku)
-    vendor_obj = Vendors.objects.get(name=vendors)
-
-    with transaction.atomic():
-        Consumables.objects.get(sku=sku).update(quantity = quantity+mutation_qty)
-        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = mutation_qty, price_pcs = price_pcs, vendors = vendor_obj)
-
-def create_new_pricing(clean_form):
-    sku = clean_form['sku']
-    name = clean_form['name']
-    description = clean_form['description']
-    is_sellable = clean_form['is_sellable']
-    sell_price = clean_form['sell_price']
     
-    cons_obj = Consumables.objects.get(sku=sku)
-    price_obj = ConsumablesPricing.objects.get(consumable=cons_obj, end_date=None)
+    consumablespricing_obj.end_date = time_updated
+    consumablespricing_obj.save()
 
-    #print(price_obj)
-    
-    with transaction.atomic():
-        price_obj.end_date=date.today()
-        price_obj.save()
-        ConsumablesPricing.objects.create(consumable=cons_obj, start_date=date.today(), sell_price=sell_price)
+    ConsumablesPricing.objects.create(consumable=cons_obj, sell_price=sell_price, start_date=time_updated)
