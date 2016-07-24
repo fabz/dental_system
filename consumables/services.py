@@ -32,7 +32,12 @@ def create_new_consumables_mutation(clean_form):
         '''Stock In'''
         cons_obj.quantity += int(mutation_qty)
         cons_obj.save()
+<<<<<<< Updated upstream
         ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty=mutation_qty, price_pcs=price_pcs, vendors=vendor_obj)
+=======
+        #somehow quantity nya gak bisa diupdate
+        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = mutation_qty, price_pcs = price_pcs, vendors = vendor_obj)
+>>>>>>> Stashed changes
     else:
         '''Stock Out'''
         cons_obj.quantity = cons_obj.quantity - int(mutation_qty)

@@ -64,6 +64,9 @@ class ConsumableSearchForm(SearchForm):
 
 
 class ConsumablesMutationForm(forms.ModelForm):
+    '''
+    Gimana caranya untuk bisa otomatis ubah form kalau mutation type nya out?
+    '''
 
     class Meta:
         model = Consumables
@@ -73,7 +76,7 @@ class ConsumablesMutationForm(forms.ModelForm):
     sku = forms.Field(label='SKU', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     name = forms.Field(label='Name', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     vendors = forms.ModelChoiceField(queryset=Vendors.objects.all(), empty_label='--Please Choose--')
-    mutation_qty = forms.IntegerField(label='Stock In Quantity')
+    mutation_qty = forms.IntegerField(label='Mutation Quantity')
     price_pcs = forms.FloatField(label='Price per Piece')
     
 

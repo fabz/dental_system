@@ -6,7 +6,7 @@ from customers.models import Customer
 from dental_system.forms import SearchForm
 
 
-FIELDS = ['customer_type', 'name', 'place_of_birth', 'date_of_birth', 'phone_number1', 'phone_number2', 'email', 'address']
+FIELDS = ['customer_type', 'name', 'place_of_birth', 'date_of_birth', 'phone_number1', 'phone_number2', 'email', 'address','history', 'alergies']
 
 
 class CustomersForm(forms.ModelForm):
@@ -22,6 +22,8 @@ class CustomersForm(forms.ModelForm):
     phone_number2 = forms.Field(label='Phone Number 2', required=False)
     email = forms.EmailField(required=False, error_messages={"invalid": "Invalid email address"})
     date_of_birth = forms.DateField(label='D.O.B* (dd-mm-yyyy)', input_formats=['%d-%m-%Y'], error_messages={"invalid": "Format must be dd-mm-yyyy"})
+    history = forms.CharField(label='Illness History*', widget=forms.Textarea())
+    alergies = forms.CharField(label='Alergies*', widget=forms.Textarea())
 
 
 class CustomersEditForm(forms.ModelForm):
@@ -36,7 +38,9 @@ class CustomersEditForm(forms.ModelForm):
     phone_number2 = forms.Field(label='Phone Number 2', required=False)
     email = forms.EmailField(required=False, error_messages={"invalid": "Invalid email address"})
     date_of_birth = forms.DateField(label='D.O.B* (dd-mm-yyyy)', input_formats=['%d-%m-%Y'], error_messages={"invalid": "Format must be dd-mm-yyyy"})
-
+    history = forms.CharField(label='Illness History*', widget=forms.Textarea())
+    alergies = forms.CharField(label='Alergies*', widget=forms.Textarea())
+    
 
 class CustomerSearchForm(SearchForm):
     

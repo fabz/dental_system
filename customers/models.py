@@ -25,6 +25,8 @@ class Customer(DentalModel):
     email = models.CharField(max_length=100, null=True, db_index=True)
     address = TextField()
     id_number = CodeField(db_index=True)
+    history = TextField()
+    alergies = TextField()
     photo = models.TextField()
 
     def __str__(self):

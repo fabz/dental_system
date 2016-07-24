@@ -141,19 +141,17 @@ class ConsumablesMutationEditView(UpdateView):
 
 
 class ConsumablesMutationHistView(DentalSystemListView):
-    """
-
-    """
     template_name = 'consumables/mutation_hist.html'
     page_title = 'Mutation History'
     order_by_default = ['-created_time', '-id']
     #search_form = ConsumableSearchForm
 
     def dispatch(self, request, *args, **kwargs):
+        self.pk = kwargs['pk']
         return super(ConsumablesMutationHistView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        ConsumablesStockMutation.objects.all()
+        return ConsumablesStockMutation.objects.filter(consumable=self.pk)
 
     def get_context_data(self, **kwargs):
         context_data = super(ConsumablesMutationHistView, self).get_context_data(**kwargs)
