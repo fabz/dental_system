@@ -21,33 +21,32 @@ def create_new_consumables(clean_form):
 def create_new_consumables_mutation(clean_form):
     mutation_type = clean_form['mutation_type']
     sku = clean_form['sku']
-    name = clean_form['name']
     vendors = clean_form['vendors']
     mutation_qty = clean_form['mutation_qty']
     price_pcs = clean_form['price_pcs']
-    
+
     cons_obj = Consumables.objects.get(sku=sku)
     vendor_obj = Vendors.objects.get(name=vendors)
-    
+
     if int(mutation_type) == 0:
         '''Stock In'''
-        cons_obj.quantity = cons_obj.quantity+int(mutation_qty)
+        cons_obj.quantity += int(mutation_qty)
         cons_obj.save()
-        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = mutation_qty, price_pcs = price_pcs, vendors = vendor_obj)
+        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty=mutation_qty, price_pcs=price_pcs, vendors=vendor_obj)
     else:
         '''Stock Out'''
-        cons_obj.quantity = cons_obj.quantity-int(mutation_qty)
+        cons_obj.quantity = cons_obj.quantity - int(mutation_qty)
         cons_obj.save()
-        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty = -1*mutation_qty, price_pcs = 0, vendors = "N/A")
+        ConsumablesStockMutation.objects.create(consumable=cons_obj, mutation_qty=-(mutation_qty), price_pcs=0, vendors="N/A")
 
-        
-def create_new_pricing(consumablespricing_obj,sell_price, sku):
+
+def create_new_pricing(consumablespricing_obj, sell_price, sku):
     '''
     create consumables price history
-    ''' 
+    '''
     time_updated = timezone.now()
     cons_obj = Consumables.objects.get(sku=sku)
-    
+
     consumablespricing_obj.end_date = time_updated
     consumablespricing_obj.save()
 

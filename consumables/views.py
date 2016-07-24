@@ -70,7 +70,7 @@ class ConsumablesNewView(FormView):
 
 
 class ConsumablesEditView(FormView):
-    
+
     '''
     Done
     '''
@@ -90,17 +90,18 @@ class ConsumablesEditView(FormView):
     def get(self, request, *args, **kwargs):
         form = self.form_class(consumable=kwargs['pk'])
         return self.render_to_response(self.get_context_data(form=form))
-    
+
     def post(self, request, *args, **kwargs):
         cons_price_id = kwargs['pk']
         sell_price = float(request.POST['sell_price'])
         sku = request.POST['sku']
-        
+
         with transaction.atomic():
             consumablespricing_obj = ConsumablesPricing.objects.get(consumable=cons_price_id, end_date=None)
             if consumablespricing_obj.sell_price != sell_price:
                 create_new_pricing(consumablespricing_obj, sell_price, sku)
         return self.get_success_url()
+
 
 class ConsumablesMutationNewView(UpdateView):
     """
@@ -114,7 +115,7 @@ class ConsumablesMutationNewView(UpdateView):
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, 'Changes successfully saved')
-        return urlresolvers.reverse('consumables_index')
+        return HttpResponseRedirect(urlresolvers.reverse('consumables_index'))
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
@@ -122,7 +123,7 @@ class ConsumablesMutationNewView(UpdateView):
 
     def form_valid(self, form):
         create_new_consumables_mutation(form.cleaned_data)
-        return super(ConsumablesMutationNewView, self).form_valid(form)
+        return self.get_success_url()
 
 
 class ConsumablesMutationEditView(UpdateView):
@@ -138,9 +139,10 @@ class ConsumablesMutationEditView(UpdateView):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(ConsumablesMutationEditView, self).form_invalid(form)
 
+
 class ConsumablesMutationHistView(DentalSystemListView):
     """
-    
+
     """
     template_name = 'consumables/mutation_hist.html'
     page_title = 'Mutation History'
