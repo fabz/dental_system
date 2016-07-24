@@ -19,7 +19,10 @@
 body{
     padding: 60px 0;
 }
-
+ul
+{
+    list-style-type: none;
+}
 /* list style */
 .list-view th a{
     display:block;
