@@ -64,13 +64,9 @@ class ConsumableSearchForm(SearchForm):
 
 
 class ConsumablesMutationForm(forms.ModelForm):
-    '''
-    Gimana caranya untuk bisa otomatis ubah form kalau mutation type nya out?
-    '''
-
     class Meta:
         model = Consumables
-        fields = ['mutation_type', 'sku', 'name', 'vendors', 'mutation_qty', 'price_pcs']
+        fields = ['mutation_type', 'sku', 'name', 'vendors', 'mutation_qty', 'price_pcs', 'remarks']
 
     mutation_type = forms.ChoiceField(label='In/Out', widget = forms.Select(), choices = ((0, 'In'), (1, 'Out')))
     sku = forms.Field(label='SKU', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
@@ -78,22 +74,5 @@ class ConsumablesMutationForm(forms.ModelForm):
     vendors = forms.ModelChoiceField(queryset=Vendors.objects.all(), empty_label='--Please Choose--')
     mutation_qty = forms.IntegerField(label='Mutation Quantity')
     price_pcs = forms.FloatField(label='Price per Piece')
+    remarks = forms.CharField(label='Remarks', widget=forms.Textarea())
     
-
-class ConsumablesMutationEditForm(forms.ModelForm):
-
-    class Meta:
-        model = Consumables
-        fields = FIELDS
-
-    sku = forms.Field(label='SKU*', validators=[RegexValidator(regex='^\d{8}$', message='SKU must be 8 digit number'),
-                                                MinLengthValidator(8), MaxLengthValidator(8)], widget=forms.TextInput(attrs={'size': '8', 'maxlength': '8'}))
-    name = forms.Field(label='Name*')
-    mutation_qty = forms.IntegerField()
-    price_pcs = forms.FloatField()
-    # vendors = forms.Field() #Need to select choice from Vendor model
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop("consumable", None)
-        super(ConsumablesEditForm, self).__init__(*args, **kwargs)
-

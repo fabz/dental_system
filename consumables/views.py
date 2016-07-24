@@ -126,20 +126,6 @@ class ConsumablesMutationNewView(UpdateView):
         return self.get_success_url()
 
 
-class ConsumablesMutationEditView(UpdateView):
-    form_class = ConsumablesMutationEditForm
-    template_name = 'consumables/mutation_edit.html'
-    model = Consumables
-
-    def get_success_url(self):
-        add_success_message(self.request)
-        return urlresolvers.reverse("consumables_index")
-
-    def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
-        return super(ConsumablesMutationEditView, self).form_invalid(form)
-
-
 class ConsumablesMutationHistView(DentalSystemListView):
     template_name = 'consumables/mutation_hist.html'
     page_title = 'Mutation History'
