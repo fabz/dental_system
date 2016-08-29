@@ -19,7 +19,6 @@ class TrxNewForm(forms.ModelForm):
 
     customer = forms.ModelChoiceField(queryset=Customer.objects.all())
     dentist = forms.ModelChoiceField(queryset=Dentists.objects.all())
-    Treatments = forms.ModelMultipleChoiceField(queryset=Treatments.objects.all(), widget=forms.CheckboxSelectMultiple())
 
     def __init__(self, *args, **kwargs):
         super(TrxNewForm, self).__init__(*args, **kwargs)

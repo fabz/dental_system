@@ -11,7 +11,7 @@ class Transactions(DentalModel):
     customer = models.ForeignKey(Customer)
     total_amount = models.CharField(max_length=12)
     dentist = models.ForeignKey(Dentists)
-    counter = models.SmallIntegerField()
+    counter = models.SmallIntegerField(default=1)
 
     def __unicode__(self):
         return "{} - {}".format(self.name, self.phone_number)

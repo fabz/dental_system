@@ -1,6 +1,6 @@
 {% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
 {% block additional_right_button %}
-    <a href="{% url 'trxs_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Transactions' as trxs_new %}{{trxs_new|title}}</a>
+    <a href="{% url 'trxs_detail_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Transaction Details' as trxs_new %}{{trxs_new|title}}</a>
 {% endblock %}
 {% block table_headers %}
     <tr>
@@ -19,6 +19,6 @@
     <td>{{ obj.amount }}</td>
     <td>{{ obj.dentist }}</td>
     <td>
-        <a href="{% url 'trxs_detail_index' obj.trx_number %}" class="btn btn-primary">View Transaction Detail</a>
+        <a href="" class="btn btn-primary">View Transaction Detail</a>
     </td>
 {% endblock %}
