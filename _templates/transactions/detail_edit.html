@@ -1,13 +1,13 @@
 {% extends "layouts/base.html" %}{% load homepage_helpers %}{% load url from future %}{% load i18n %}
-{% block title %}{% trans 'New Transaction' as title_label %}{{title_label|title}}{% endblock %}
+{% block title %}{% trans 'Transaction Detail' as title_label %}{{title_label|title}}{% endblock %}
 {% block content %}
 {{ request.id }}
 <div class="row form-view">
   <div class="span9">
     <div class="page-header">
-      <h1>{% trans 'Edit Transaction' as product_label %}{{product_label|title}}</h1>
+      <h1>{% trans 'Edit Transaction Details' as product_label %}{{product_label|title}}</h1>
     </div>
-    {% include 'layouts/form.html' with form_back_url='trxs_index'%}
+    {% include 'layouts/form.html' with form_reverse=back_url%}
   </div><!-- end span9 -->
   
   <div class="span3">

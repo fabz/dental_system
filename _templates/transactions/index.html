@@ -4,6 +4,7 @@
 {% endblock %}
 {% block table_headers %}
     <tr>
+        <th style="width:40px">Edit</th>
         <th><a href="?{% sort_field_query 'trx_number' %}">ID</a></th>
         <th width="155px"><a href="?{% sort_field_query 'trx_date' %}">Created Time</a></th>
         <th><a href="?{% sort_field_query 'customer' %}">Patient Name</a></th>
@@ -13,6 +14,11 @@
     </tr>    
 {% endblock %}
 {% block table_rows %}
+    <td>
+        <div class="row-tools">
+            <a href="{% url 'trxs_edit' obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
+    </td>
     <td>{{ obj.trx_number }}</td>
     <td>{{obj.trx_date|date:'d-m-Y' }}</td>
     <td>{{ obj.customer }}</td>

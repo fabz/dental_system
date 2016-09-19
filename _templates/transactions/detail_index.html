@@ -1,24 +1,26 @@
 {% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
 {% block additional_right_button %}
-    <a href="{% url 'trxs_detail_new' %}" class="btn btn-primary pull-right">{% trans 'Add New Transaction Details' as trxs_new %}{{trxs_new|title}}</a>
+    <a href="{% url 'trxs_detail_new' transaction_id %}" class="btn btn-primary pull-right">{% trans 'Add New Transaction Details' as trxs_new %}{{trxs_new|title}}</a>
 {% endblock %}
 {% block table_headers %}
     <tr>
-        <th><a href="?{% sort_field_query 'trx_number' %}">ID</a></th>
-        <th width="155px"><a href="?{% sort_field_query 'trx_date' %}">Created Time</a></th>
-        <th><a href="?{% sort_field_query 'customer' %}">Patient Name</a></th>
-        <th><a href="?{% sort_field_query 'total_amount' %}">Amount</a></th>
-        <th><a href="?{% sort_field_query 'dentist' %}">Dentist</a></th>
-        <th>Action</th>
+        <th style="width:40px">Edit</th>
+        <th><a href="?{% sort_field_query 'detail_type' %}">Detail Type</a></th>
+        <th><a href="?{% sort_field_query 'detail_id' %}">Detail ID</a></th>
+        <th><a href="?{% sort_field_query 'qty' %}">Quantity</a></th>
+        <th><a href="?{% sort_field_query 'discount' %}">Discount</a></th>
+        <th><a href="?{% sort_field_query 'price' %}">Price</a></th>
     </tr>    
 {% endblock %}
 {% block table_rows %}
-    <td>{{ obj.trx_number }}</td>
-    <td>{{obj.trx_date|date:'d-m-Y' }}</td>
-    <td>{{ obj.customer }}</td>
-    <td>{{ obj.amount }}</td>
-    <td>{{ obj.dentist }}</td>
-    <td>
-        <a href="" class="btn btn-primary">View Transaction Detail</a>
+<td>
+        <div class="row-tools">
+            <a href="{% url 'trxs_detail_edit' transaction_id obj.id%}" class="btn btn-mini btn-primary btn-xs" title="{% trans 'edit' as edit_label %}{{edit_label|title}}"><span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
     </td>
+    <td>{{ obj.detail_type }}</td>
+    <td>{{ obj.detail_id }}</td>
+    <td>{{ obj.qty }}</td>
+    <td>{{ obj.discount }}</td>
+    <td>{{ obj.price }}</td>
 {% endblock %}

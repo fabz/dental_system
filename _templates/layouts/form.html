@@ -28,6 +28,8 @@
     
     {% if form_back_url %}
     <a href="{% url form_back_url %}" class="btn">{% trans 'Close' %}</a>
-    {% endif %}
+    {% elif form_reverse %}
+		<a href="{{ form_reverse }}" class="btn">{% trans 'Close' %}</a>
+		{% endif %}
   </div>
 </form>
