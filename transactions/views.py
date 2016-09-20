@@ -72,6 +72,7 @@ class TrxNewView(CreateView):
 
     def post(self, request, *args, **kwargs):
         form = TrxNewForm(self.request.POST)
+        print("customer", form.fields['customer'])
         if form.is_valid():
             return self.form_valid(form)
         else:
@@ -115,7 +116,7 @@ class TrxDetailIndexView(DentalSystemListView):
     def get_initial_queryset(self):
         print("index called")
         print("transaction_id", transaction_id)
-        transaction_obj = Transactions.objects.get(trx_number=transaction_id)
+        transaction_obj = Transactions.objects.get(id=transaction_id)
         return TransactionDetail.objects.filter(transaction=transaction_obj)
 
     def get_context_data(self, **kwargs):
@@ -180,7 +181,7 @@ class TrxDetailEditView(UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         global transaction_id
-        transaction_id = TransactionDetail.objects.get(id=kwargs.pop('pk')).transaction.trx_number
+        transaction_id = TransactionDetail.objects.get(id=kwargs.pop('pk')).transaction.id
         print("transaction_id", transaction_id)
         return super(TrxDetailEditView, self).dispatch(request, *args, **kwargs)
 
