@@ -35,7 +35,7 @@ class TrxIndexView(DentalSystemListView):
         return Transactions.objects.all()
 
     def get_context_data(self, **kwargs):
-        
+
         context_data = super(TrxIndexView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
 
@@ -82,6 +82,7 @@ class TrxNewView(CreateView):
         print(form.cleaned_data)
         return super(TrxNewView, self).form_valid(form)
 
+
 class TrxEditView(UpdateView):
     form_class = TrxEditForm
     template_name = 'transactions/edit.html'
@@ -123,7 +124,7 @@ class TrxDetailIndexView(DentalSystemListView):
         context_data = super(TrxDetailIndexView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
         context_data['transaction_id'] = transaction_id
-        
+
         return context_data
 
 
@@ -161,7 +162,10 @@ class TrxDetailNewView(CreateView):
         return super(TrxDetailNewView, self).form_invalid(form)
 
     def post(self, request, *args, **kwargs):
-        form = TrxDetailNewForm(self.request.POST, transaction_id=transaction_id)
+        data = self.request.POST
+        data['transaction'] = Transactions.objects.get(id=transaction_id)
+        print(data)
+        form = TrxDetailNewForm(data, transaction_id=transaction_id)
         if form.is_valid():
             return self.form_valid(form)
         else:

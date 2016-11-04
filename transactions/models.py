@@ -14,7 +14,7 @@ class Transactions(DentalModel):
     counter = models.SmallIntegerField(default=1)
 
     def __unicode__(self):
-        return "{} - {}".format(self.name, self.phone_number)
+        return "{}".format(self.trx_number)
 
 
 class TransactionDetail(DentalModel):
