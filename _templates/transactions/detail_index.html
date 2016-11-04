@@ -6,7 +6,6 @@
     <tr>
         <th style="width:40px">Edit</th>
         <th><a href="?{% sort_field_query 'detail_type' %}">Detail Type</a></th>
-        <th><a href="?{% sort_field_query 'detail_id' %}">Detail ID</a></th>
         <th><a href="?{% sort_field_query 'qty' %}">Quantity</a></th>
         <th><a href="?{% sort_field_query 'discount' %}">Discount</a></th>
         <th><a href="?{% sort_field_query 'price' %}">Price</a></th>
@@ -19,7 +18,6 @@
         </div>
     </td>
     <td>{{ obj.detail_type }}</td>
-    <td>{{ obj.detail_id }}</td>
     <td>{{ obj.qty }}</td>
     <td>{{ obj.discount }}</td>
     <td>{{ obj.price }}</td>

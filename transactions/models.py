@@ -24,5 +24,3 @@ class TransactionDetail(DentalModel):
     qty = models.FloatField()
     discount = models.FloatField()
     price = models.FloatField()
-#     consumables = models
-#     consumables_qty

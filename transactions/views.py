@@ -16,6 +16,7 @@ from dental_system.helpers import set_attributes
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from transactions.forms import TrxNewForm, TrxEditForm, TrxDetailNewForm, TrxDetailEditForm
 from transactions.models import Transactions, TransactionDetail
+from treatments.models import Treatments
 
 
 class TrxIndexView(DentalSystemListView):
@@ -105,8 +106,6 @@ class TrxDetailIndexView(DentalSystemListView):
     template_name = 'transactions/detail_index.html'
     page_title = 'Transaction Details Dashboard'
     order_by_default = ['-trx_date', '-trx_number']
-#     search_form = ProductSearchForm
-
     transaction_id = ''
 
     def dispatch(self, request, *args, **kwargs):
@@ -118,7 +117,11 @@ class TrxDetailIndexView(DentalSystemListView):
         print("index called")
         print("transaction_id", transaction_id)
         transaction_obj = Transactions.objects.get(id=transaction_id)
-        return TransactionDetail.objects.filter(transaction=transaction_obj)
+        trx_details = TransactionDetail.objects.filter(transaction=transaction_obj)
+        for trx in trx_details:
+            print('eval', eval(trx.detail_type))
+            trx.detail_type = eval(trx.detail_type).objects.get(id=trx.detail_id).name
+        return trx_details
 
     def get_context_data(self, **kwargs):
         context_data = super(TrxDetailIndexView, self).get_context_data(**kwargs)
@@ -162,10 +165,7 @@ class TrxDetailNewView(CreateView):
         return super(TrxDetailNewView, self).form_invalid(form)
 
     def post(self, request, *args, **kwargs):
-        data = self.request.POST
-        data['transaction'] = Transactions.objects.get(id=transaction_id)
-        print(data)
-        form = TrxDetailNewForm(data, transaction_id=transaction_id)
+        form = TrxDetailNewForm(self.request.POST, transaction_id=transaction_id)
         if form.is_valid():
             return self.form_valid(form)
         else:

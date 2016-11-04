@@ -7,11 +7,12 @@ from dentists.models import Dentists
 from transactions.models import Transactions, TransactionDetail
 from treatments.models import Treatments
 from dental_system.helpers import create_invoice_number, get_counter_from_cust_id
+from consumables.models import Consumables
 
 
 FIELDS = ('counter', 'trx_number', 'trx_date', 'customer', 'dentist',)
 DETAIL_FIELDS = ('transaction', 'detail_type', 'detail_id', 'qty', 'discount', 'price',)
-TRX_DETAIL_FIELDS = ('transaction', 'customer', 'detail_type', 'qty', 'discount', 'price',)
+TRX_DETAIL_FIELDS = ('transaction', 'customer', 'detail_type', 'detail_id', 'qty', 'discount', 'price',)
 
 
 class TrxNewForm(forms.ModelForm):
@@ -68,13 +69,10 @@ class TrxDetailNewForm(forms.ModelForm):
         model = TransactionDetail
         fields = TRX_DETAIL_FIELDS
 
-    transaction = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+#     transaction = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     customer = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    detail_type = forms.ModelChoiceField(queryset=Treatments.objects.all())
-#     detail_id = forms.IntegerField()
-#     qty = forms.FloatField()
-#     discount = forms.FloatField()
-#     price = forms.FloatField()
+    detail_type = forms.ChoiceField(label='Transaction Type', widget=forms.Select(), choices=(('Treatments', 'Treatments'), ('Consumables', 'Consumables')))
+    detail_id = forms.ChoiceField(label='Transaction Detail', choices=Treatments.objects.all().values_list('id', 'name'))
 
     def __init__(self, *args, **kwargs):
         transaction_id = kwargs.pop('transaction_id', None)
@@ -83,22 +81,22 @@ class TrxDetailNewForm(forms.ModelForm):
         self.fields['transaction'].initial = Transactions.objects.get(id=transaction_id)
         self.fields['transaction'].widget = forms.HiddenInput()
         self.fields['customer'].initial = Transactions.objects.get(id=transaction_id).customer
-#         self.fields['transaction'].widget = forms.CharField(attrs={'readonly': True})
-#         self.fields['transaction'].widget.attrs['readonly'] = True
 
 
 class TrxDetailEditForm(forms.ModelForm):
 
     class Meta:
         model = TransactionDetail
-        fields = DETAIL_FIELDS
+        fields = TRX_DETAIL_FIELDS
 
-    detail_type = forms.CharField()
-    detail_id = forms.IntegerField()
-    qty = forms.FloatField()
-    discount = forms.FloatField()
-    price = forms.FloatField()
+    customer = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    detail_type = forms.ChoiceField(label='Transaction Type', widget=forms.Select(), choices=(('Treatments', 'Treatments'), ('Consumables', 'Consumables')))
+    detail_id = forms.ChoiceField(label='Transaction Detail', choices=Treatments.objects.all().values_list('id', 'name'))
 
     def __init__(self, *args, **kwargs):
         super(TrxDetailEditForm, self).__init__(*args, **kwargs)
+        transaction_id = kwargs['instance'].transaction.id
         self.fields['transaction'].widget = forms.HiddenInput()
+        self.fields['transaction'].initial = Transactions.objects.get(id=transaction_id)
+        self.fields['transaction'].widget = forms.HiddenInput()
+        self.fields['customer'].initial = Transactions.objects.get(id=transaction_id).customer
