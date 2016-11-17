@@ -202,3 +202,36 @@ class TrxDetailEditView(UpdateView):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, 'Changes fail to save')
         return super(TrxEditView, self).form_invalid(form)
+
+
+class TrxDetailPrintView(DentalSystemListView):
+    """
+    handle product category list
+    /products/
+    """
+    template_name = 'transactions/detail_views.html'
+    page_title = 'Transaction Details Dashboard'
+    order_by_default = ['-trx_date', '-trx_number']
+    transaction_id = ''
+
+    def dispatch(self, request, *args, **kwargs):
+        global transaction_id
+        transaction_id = args[0]
+        return super(TrxDetailPrintView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial_queryset(self):
+        print("index called")
+        print("transaction_id", transaction_id)
+        transaction_obj = Transactions.objects.get(id=transaction_id)
+        trx_details = TransactionDetail.objects.filter(transaction=transaction_obj)
+#         for trx in trx_details:
+#             print('eval', eval(trx.detail_type))
+#             trx.detail_type = eval(trx.detail_type).objects.get(id=trx.detail_id).name
+        return trx_details
+
+    def get_context_data(self, **kwargs):
+        context_data = super(TrxDetailPrintView, self).get_context_data(**kwargs)
+        context_data = add_pagination(self.request, context_data)
+        context_data['transaction_id'] = transaction_id
+
+        return context_data

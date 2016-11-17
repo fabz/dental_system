@@ -1,6 +1,7 @@
 {% extends "layouts/list_template.html" %}{% load homepage_helpers %}{% load i18n %}{% load url from future %}
 {% block additional_right_button %}
     <a href="{% url 'trxs_detail_new' transaction_id %}" class="btn btn-primary pull-right">{% trans 'Add New Transaction Details' as trxs_new %}{{trxs_new|title}}</a>
+    <a href="{% url 'trxs_detail_view' transaction_id %}" class="btn btn-primary pull-right">{% trans 'Print' as trxs_view %}{{trxs_view|title}}</a>
 {% endblock %}
 {% block table_headers %}
     <tr>

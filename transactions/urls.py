@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 
-from transactions.views import TrxIndexView, TrxNewView, TrxEditView, TrxDetailIndexView, TrxDetailNewView, TrxDetailEditView
+from transactions.views import TrxIndexView, TrxNewView, TrxEditView, TrxDetailIndexView, TrxDetailNewView, TrxDetailEditView,\
+    TrxDetailPrintView
 
 
 urlpatterns = patterns('',
@@ -8,9 +9,9 @@ urlpatterns = patterns('',
                        url(r'^new/$', TrxNewView.as_view(), name='trxs_new'),
                        url(r'^(?P<pk>\d+)/edit/$', TrxEditView.as_view(), name='trxs_edit'),
                        url(r'^detail/([0-9]*)/$', TrxDetailIndexView.as_view(), name='trxs_detail_index'),
+                       url(r'^detail/([0-9]*)/views/$', TrxDetailPrintView.as_view(), name='trxs_detail_view'),
                        url(r'^detail/([0-9]*)/(?P<pk>\d+)/edit/$', TrxDetailEditView.as_view(), name='trxs_detail_edit'),
                        url(r'^detail/new/([0-9]*)/$', TrxDetailNewView.as_view(), name='trxs_detail_new'),
-                       #                        url(r'^(?P<pk>\d+)/edit/$', EditView.as_view(), name='dentists_edit'),
                        #                        url(r'^(?P<pk>\d+)/edit_price/$', EditPriceView.as_view(), name='set_product_price'),
                        #                        url(r'^(?P<pk>\d+)/edit_bonus/$', EditBonusView.as_view(), name='set_product_bonus'),
                        #                        url(r'^(?P<pk>\d+)/toggle_activation/$', ToggleActivationView.as_view(), name='toggle_product_activation'),
