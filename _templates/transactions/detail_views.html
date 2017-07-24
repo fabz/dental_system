@@ -9,13 +9,13 @@
 <!-- CSS Code -->
 <style type="text/css" scoped>
 table.GeneratedTable {
-width:50%;
+width:90%;
 background-color:#FFFFFF;
 border-collapse:collapse;border-width:1px;
 border-color:#000000;
 border-style:solid;
 color:#000000;
-margin:30px;
+margin:auto;
 }
 
 table.GeneratedTable td, table.GeneratedTable th {
@@ -34,46 +34,26 @@ background-color:#CCFF99;
 <table class="GeneratedTable">
 <thead>
 <tr>
-<th>Number #</th>
-<th>Patient Name</th>
 <th>Treatments</th>
-<th>Subtotal</th>
+<th>Qty</th>
 <th>Discount</th>
 <th>Total</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Row 1, Cell 1</td>
-<td>Row 1, Cell 2</td>
-<td>Row 1, Cell 3</td>
-<td>Row 1, Cell 1</td>
-<td>Row 1, Cell 2</td>
-<td>Row 1, Cell 3</td>
-</tr>
-<tr>
-<td>Row 2, Cell 1</td>
-<td>Row 2, Cell 2</td>
-<td>Row 2, Cell 3</td>
-<td>Row 2, Cell 1</td>
-<td>Row 2, Cell 2</td>
-<td>Row 2, Cell 3</td>
-</tr>
-<tr>
-<td>Row 3, Cell 1</td>
-<td>Row 3, Cell 2</td>
-<td>Row 3, Cell 3</td>
-<td>Row 3, Cell 1</td>
-<td>Row 3, Cell 2</td>
-<td>Row 3, Cell 3</td>
-</tr>
+{% for data in object_list %}
+    <tr>
+    <td>{{data.detail_type}}</td>
+    <td>{{data.qty|add:"0"}}</td>
+    <td>{{data.discount|add:"0"}}</td>
+    <td>{{data.price|add:"0"}}</td>
+    </tr>
+{% endfor %}
 <tr>
 <td></td>
 <td></td>
 <td></td>
-<td></td>
-<td></td>
-<td>Harganya</td>
+<td>{{trx_amount}}</td>
 </tr>
 </tbody>
 </table>

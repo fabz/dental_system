@@ -1,3 +1,5 @@
+import traceback
+
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import urlresolvers
@@ -114,8 +116,6 @@ class TrxDetailIndexView(DentalSystemListView):
         return super(TrxDetailIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        print("index called")
-        print("transaction_id", transaction_id)
         transaction_obj = Transactions.objects.get(id=transaction_id)
         trx_details = TransactionDetail.objects.filter(transaction=transaction_obj)
         for trx in trx_details:
@@ -127,6 +127,7 @@ class TrxDetailIndexView(DentalSystemListView):
         context_data = super(TrxDetailIndexView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
         context_data['transaction_id'] = transaction_id
+        print('context_data', context_data)
 
         return context_data
 
@@ -224,14 +225,16 @@ class TrxDetailPrintView(DentalSystemListView):
         print("transaction_id", transaction_id)
         transaction_obj = Transactions.objects.get(id=transaction_id)
         trx_details = TransactionDetail.objects.filter(transaction=transaction_obj)
-#         for trx in trx_details:
-#             print('eval', eval(trx.detail_type))
-#             trx.detail_type = eval(trx.detail_type).objects.get(id=trx.detail_id).name
+        for trx in trx_details:
+            print('eval', eval(trx.detail_type))
+            trx.detail_type = eval(trx.detail_type).objects.get(id=trx.detail_id).name
         return trx_details
 
     def get_context_data(self, **kwargs):
         context_data = super(TrxDetailPrintView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
         context_data['transaction_id'] = transaction_id
+        context_data['trx_amount'] = int(sum(list(TransactionDetail.objects.filter(
+            transaction_id=transaction_id).values_list('price', flat=True))))
 
         return context_data
