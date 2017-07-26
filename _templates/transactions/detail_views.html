@@ -1,7 +1,7 @@
 <br />
 <br />
 <a class="navbar-brand" href="{% url 'homepage_index' %}">
-	<img style="max-width:100px; margin-top: -11px; margin-left:10px;" src="{{ STATIC_URL }}images/Logo.png" alt="LOGO">
+	<img style="max-width:150px; margin-left:10%;" src="{{ STATIC_URL }}images/Logo.png" alt="LOGO">
 </a>
 
 <!-- Codes by HTML.am -->
@@ -9,7 +9,7 @@
 <!-- CSS Code -->
 <style type="text/css" scoped>
 table.GeneratedTable {
-width:90%;
+width:80%;
 background-color:#FFFFFF;
 border-collapse:collapse;border-width:1px;
 border-color:#000000;
@@ -28,9 +28,29 @@ padding:3px;
 table.GeneratedTable thead {
 background-color:#CCFF99;
 }
+
+table.signatureTable {
+margin-right: 10%;
+margin-left: auto;
+text-align:center;
+width:25%;
+}
+
+table.signatureTable td{
+padding:3px;
+vertical-align: top;
+}
 </style>
 
 <!-- HTML Code -->
+<p style="text-align: right; margin-top: -50px; margin-right:10%;">Nomor billing </p>
+<p style="text-align: right; margin-right:10%;">{{trx_data.trx_number}} </p>
+<p style='text-align: center'>Billing Statement</p>
+
+<p style="text-align: left; margin-left:10%">
+Customer Name: {{customer_name}}
+
+</p>
 <table class="GeneratedTable">
 <thead>
 <tr>
@@ -54,6 +74,17 @@ background-color:#CCFF99;
 <td></td>
 <td></td>
 <td>{{trx_amount}}</td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table class='signatureTable'>
+<tbody>
+<tr style='height:125px'>
+<td> Tangerang, {{trx_data.created_time|date:'d E Y'}}</td>
+</tr>
+<tr>
+<td>{{trx_data.dentist.name}}</td>
 </tr>
 </tbody>
 </table>

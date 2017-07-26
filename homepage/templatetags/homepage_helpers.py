@@ -37,6 +37,8 @@ def in_group(user, group):
         return True
     else:
         return False
+
+
 in_group.is_safe = True
 
 
@@ -53,6 +55,8 @@ def divisible(number, divisor):
         return number % divisor == 0
     except:
         return False
+
+
 divisible.is_safe = True
 
 

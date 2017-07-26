@@ -233,8 +233,12 @@ class TrxDetailPrintView(DentalSystemListView):
     def get_context_data(self, **kwargs):
         context_data = super(TrxDetailPrintView, self).get_context_data(**kwargs)
         context_data = add_pagination(self.request, context_data)
+        trx_obj = Transactions.objects.get(id=transaction_id)
+        trx_detail_obj = trx_obj.transactiondetail_set.all()
         context_data['transaction_id'] = transaction_id
-        context_data['trx_amount'] = int(sum(list(TransactionDetail.objects.filter(
-            transaction_id=transaction_id).values_list('price', flat=True))))
+        context_data['trx_amount'] = int(sum(list(trx_detail_obj.values_list('price', flat=True))))
+        context_data['customer_name'] = trx_obj.customer.name
+        context_data['dentists_name'] = trx_obj.dentist.name
+        context_data['trx_data'] = trx_obj
 
         return context_data
