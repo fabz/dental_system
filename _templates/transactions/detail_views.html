@@ -43,20 +43,20 @@ vertical-align: top;
 </style>
 
 <!-- HTML Code -->
-<p style="text-align: right; margin-top: -50px; margin-right:10%;">Nomor billing </p>
-<p style="text-align: right; margin-right:10%;">{{trx_data.trx_number}} </p>
-<p style='text-align: center'>Billing Statement</p>
+<p style="text-align: right; margin-top: -50px; margin-right:10%;">{{trx_data.trx_number}} </p>
+<h2 style='text-align: center'>Billing Statement</h2>
 
 <p style="text-align: left; margin-left:10%">
-Customer Name: {{customer_name}}
+Customer Name:&emsp;{{customer_name}}
+
 
 </p>
 <table class="GeneratedTable">
 <thead>
 <tr>
 <th>Treatments</th>
-<th>Qty</th>
-<th>Discount</th>
+<th>Price</th>
+<th>Remarks</th>
 <th>Total</th>
 </tr>
 </thead>
@@ -64,8 +64,8 @@ Customer Name: {{customer_name}}
 {% for data in object_list %}
     <tr>
     <td>{{data.detail_type}}</td>
-    <td>{{data.qty|add:"0"}}</td>
-    <td>{{data.discount|add:"0"}}</td>
+    <td>{{data.treatment_price|add:"0"}}</td>
+    <td>{{data.remarks}}</td>
     <td>{{data.price|add:"0"}}</td>
     </tr>
 {% endfor %}

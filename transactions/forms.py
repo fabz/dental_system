@@ -12,7 +12,7 @@ from treatments.models import Treatments
 
 FIELDS = ('counter', 'trx_number', 'trx_date', 'customer', 'dentist',)
 DETAIL_FIELDS = ('transaction', 'detail_type', 'detail_id', 'qty', 'discount', 'price',)
-TRX_DETAIL_FIELDS = ('transaction', 'customer', 'detail_type', 'detail_id', 'qty', 'discount', 'price',)
+TRX_DETAIL_FIELDS = ('transaction', 'customer', 'detail_type', 'detail_id', 'qty', 'discount')
 
 
 class TrxNewForm(forms.ModelForm):
@@ -99,8 +99,12 @@ class TrxDetailEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TrxDetailEditForm, self).__init__(*args, **kwargs)
-        transaction_id = kwargs['instance'].transaction.id
-        self.fields['transaction'].widget = forms.HiddenInput()
-        self.fields['transaction'].initial = Transactions.objects.get(id=transaction_id)
-        self.fields['transaction'].widget = forms.HiddenInput()
-        self.fields['customer'].initial = Transactions.objects.get(id=transaction_id).customer
+        if 'instance' in kwargs:
+            transaction_id = kwargs['instance'].transaction.id
+            self.fields['transaction'].widget = forms.HiddenInput()
+            self.fields['transaction'].initial = Transactions.objects.get(id=transaction_id)
+            self.fields['qty'].widget = forms.HiddenInput()
+            self.fields['qty'].initial = 1
+            self.fields['qty'].widget = forms.HiddenInput()
+            self.fields['transaction'].widget = forms.HiddenInput()
+            self.fields['customer'].initial = Transactions.objects.get(id=transaction_id).customer

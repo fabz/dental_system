@@ -1,20 +1,11 @@
 import traceback
 
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.core import urlresolvers
-from django.db import transaction
-from django.db.models.aggregates import Count
-from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
-from django.utils import timezone
 from django.views.generic.edit import CreateView, FormView, UpdateView
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from dental_system.helpers import set_attributes
 from dental_system.views import DentalSystemListView, add_pagination, add_success_message, prepare_form_with_file_if_exist, add_error_message
 from transactions.forms import TrxNewForm, TrxEditForm, TrxDetailNewForm, TrxDetailEditForm
 from transactions.models import Transactions, TransactionDetail
@@ -35,7 +26,7 @@ class TrxIndexView(DentalSystemListView):
         return super(TrxIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        return Transactions.objects.all()
+        return Transactions.objects.all().order_by('-created_time')
 
     def get_context_data(self, **kwargs):
 
@@ -119,7 +110,6 @@ class TrxDetailIndexView(DentalSystemListView):
         transaction_obj = Transactions.objects.get(id=transaction_id)
         trx_details = TransactionDetail.objects.filter(transaction=transaction_obj)
         for trx in trx_details:
-            print('eval', eval(trx.detail_type))
             trx.detail_type = eval(trx.detail_type).objects.get(id=trx.detail_id).name
         return trx_details
 
@@ -170,7 +160,6 @@ class TrxDetailNewView(CreateView):
         if form.is_valid():
             return self.form_valid(form)
         else:
-            print("INVALID")
             return render_to_response('transactions/detail_new.html', {'form': form}, context_instance=RequestContext(request))
 
     def form_valid(self, form):
@@ -187,7 +176,6 @@ class TrxDetailEditView(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         global transaction_id
         transaction_id = TransactionDetail.objects.get(id=kwargs.pop('pk')).transaction.id
-        print("transaction_id", transaction_id)
         return super(TrxDetailEditView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -221,13 +209,16 @@ class TrxDetailPrintView(DentalSystemListView):
         return super(TrxDetailPrintView, self).dispatch(request, *args, **kwargs)
 
     def get_initial_queryset(self):
-        print("index called")
-        print("transaction_id", transaction_id)
         transaction_obj = Transactions.objects.get(id=transaction_id)
         trx_details = TransactionDetail.objects.filter(transaction=transaction_obj)
         for trx in trx_details:
-            print('eval', eval(trx.detail_type))
-            trx.detail_type = eval(trx.detail_type).objects.get(id=trx.detail_id).name
+            treatment_obj = eval(trx.detail_type).objects.get(id=trx.detail_id)
+            trx.detail_type = treatment_obj.name
+            trx.treatment_price = treatment_obj.prices.price
+            if trx.discount > 0:
+                trx.remarks = 'Discount: -{}'.format(str(int(trx.discount)))
+            else:
+                trx.remarks = '-'
         return trx_details
 
     def get_context_data(self, **kwargs):

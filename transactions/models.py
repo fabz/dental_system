@@ -1,7 +1,7 @@
 from django.db import models
-from dental_system.models import DentalModel
-from treatments.models import Treatments
+
 from customers.models import Customer
+from dental_system.models import DentalModel
 from dentists.models import Dentists
 
 
@@ -24,3 +24,14 @@ class TransactionDetail(DentalModel):
     qty = models.FloatField()
     discount = models.FloatField()
     price = models.FloatField()
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        from treatments.models import Treatments
+        treatment_obj = eval(self.detail_type).objects.get(id=self.detail_id)
+        self.price = treatment_obj.prices.price - self.discount
+        return DentalModel.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+#     def treatment_price(self):
+#         treatment_obj = eval(self.detail_type).objects.get(id=self.detail_id)
+#         print('treatment', treatment_obj.prices.price)
+#         return treatment_obj.prices.price
